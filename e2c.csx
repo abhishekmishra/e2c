@@ -13,14 +13,12 @@ using MathNet.Numerics.LinearAlgebra.Double;
 *
 * The space of integers is kept free for new additions to information of the space.
 */
-public static double NODATA = 0;
-public static double WALL = 1;
-public static double DIRTY = 2;
-
 
 public class Space
 {
-
+    public static double NODATA = 0;
+    public static double WALL = 1;
+    public static double DIRTY = 2;
     private Matrix<Double> space;
     private int rows, columns;
     private double wallP, dirtyP;
