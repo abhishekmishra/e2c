@@ -17,70 +17,91 @@ public static double NODATA = 0;
 public static double WALL = 1;
 public static double DIRTY = 2;
 
-Matrix<Double> createEmptySpace(int rows, int columns)
-{
-    Matrix<Double> space = Matrix<Double>.Build.Dense(rows, columns);
-    space.Clear();
-    return space;
-}
 
-void randomWall(Matrix<Double> space, double prob)
+public class Space
 {
-    Random rnd = new Random();
-    for (int i = 0; i < space.RowCount; i++)
+
+    private Matrix<Double> space;
+    private int rows, columns;
+    private double wallP, dirtyP;
+
+    public Space(int r, int c, double wallProb = 0.2, double dirtyProb = 0.3)
     {
-        for (int j = 0; j < space.ColumnCount; j++)
-        {
-            double x = rnd.NextDouble();
-            if (x <= prob)
-            {
-                space[i, j] = WALL;
-            }
-        }
+        rows = r;
+        columns = c;
+        wallP = wallProb;
+        dirtyP = dirtyProb;
+        createEmptySpace(rows, columns);
+        randomWall();
+        randomDirty();
     }
-}
 
-void randomDirty(Matrix<Double> space, double prob)
-{
-    Random rnd = new Random();
-    for (int i = 0; i < space.RowCount; i++)
+    public void createEmptySpace(int rows, int columns)
     {
-        for (int j = 0; j < space.ColumnCount; j++)
+        space = Matrix<Double>.Build.Dense(rows, columns);
+        space.Clear();
+    }
+
+    public void randomWall()
+    {
+        Random rnd = new Random();
+        for (int i = 0; i < space.RowCount; i++)
         {
-            if (space[i, j] != WALL)
+            for (int j = 0; j < space.ColumnCount; j++)
             {
                 double x = rnd.NextDouble();
-                if (x <= prob)
+                if (x <= wallP)
                 {
-                    space[i, j] = DIRTY;
+                    space[i, j] = WALL;
                 }
             }
         }
     }
-}
 
-void printSpace(Matrix<Double> space) {
-    for (int i = 0; i < space.RowCount; i++)
+    public void randomDirty()
     {
-        for (int j = 0; j < space.ColumnCount; j++)
+        Random rnd = new Random();
+        for (int i = 0; i < space.RowCount; i++)
         {
-            if(space[i, j] == NODATA) {
-                Console.Write("▢");
-            }
-            if(space[i, j] == WALL) {
-                Console.Write("◉");
-            }
-            if(space[i, j] == DIRTY) {
-                Console.Write("▩");
+            for (int j = 0; j < space.ColumnCount; j++)
+            {
+                if (space[i, j] != WALL)
+                {
+                    double x = rnd.NextDouble();
+                    if (x <= dirtyP)
+                    {
+                        space[i, j] = DIRTY;
+                    }
+                }
             }
         }
-        Console.WriteLine();
+    }
+
+    public void printSpace()
+    {
+        for (int i = 0; i < space.RowCount; i++)
+        {
+            for (int j = 0; j < space.ColumnCount; j++)
+            {
+                if (space[i, j] == NODATA)
+                {
+                    Console.Write("▢");
+                }
+                if (space[i, j] == WALL)
+                {
+                    Console.Write("◉");
+                }
+                if (space[i, j] == DIRTY)
+                {
+                    Console.Write("▩");
+                }
+            }
+            Console.WriteLine();
+        }
     }
 }
 
 
 Console.WriteLine("Created new space to clean -> ");
-var sp = createEmptySpace(10, 10);
-randomWall(sp, 0.1);
-randomDirty(sp, 0.3);
-printSpace(sp);
+var sp = new Space(10, 10, 0.1, 0.3);
+sp.printSpace();
