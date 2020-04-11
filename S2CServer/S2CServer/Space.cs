@@ -190,5 +190,22 @@ namespace S2CServer
             }
             return false;
         }
+
+        public bool clean(int agentId, int row, int col)
+        {
+            var agent = agents[agentId];
+            if (agent != null)
+            {
+                if(agent.row == row && agent.col == col)
+                {
+                    if(isDirty(row, col))
+                    {
+                        space[row, col] = NODATA;
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
     }
 }

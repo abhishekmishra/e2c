@@ -29,7 +29,21 @@ namespace S2CServer
             sp.printSpace();
             if (agent > 0)
             {
-                sp.moveAgent(agent, r, c+1);
+                try
+                {
+                    for (int i = 0; i < 10; i++)
+                    {
+                        sp.moveAgent(agent, r, c + i);
+                        bool cleaned = sp.clean(agent, r, c + i);
+                        if (cleaned)
+                        {
+                            Console.WriteLine("Cleaned [" + r + ", " + (c + i) + "]");
+                        }
+                    }
+                }catch(Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
             }
 
             Console.WriteLine();
