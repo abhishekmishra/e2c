@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
@@ -19,12 +21,15 @@ namespace S2CServer
 
     public class Space
     {
-        public static double NODATA = 0;
-        public static double WALL = 1;
-        public static double DIRTY = 2;
+        public static int NODATA = 0;
+        public static int WALL = 1;
+        public static int DIRTY = 2;
         private Matrix<Double> space;
+        private Matrix<Double> agentSpace;
         private int rows, columns;
         private double wallP, dirtyP;
+
+        private Dictionary<int, AgentState> agents;
 
         public Space(int r, int c, double wallProb = 0.2, double dirtyProb = 0.3)
         {
@@ -32,6 +37,11 @@ namespace S2CServer
             columns = c;
             wallP = wallProb;
             dirtyP = dirtyProb;
+
+            agentSpace = Matrix<Double>.Build.Dense(rows, columns);
+            agentSpace.Clear();
+
+            agents = new Dictionary<int, AgentState>();
             createEmptySpace(rows, columns);
             randomWall();
             randomDirty();
@@ -96,9 +106,79 @@ namespace S2CServer
                     {
                         Console.Write("▩");
                     }
+                    if (agentSpace[i, j] == NODATA)
+                    {
+                        Console.Write("  ");
+                    }
+                    else
+                    {
+                        Console.Write((char)('A' + (agentSpace[i, j] - 2)/2));
+                        Console.Write(" ");
+                    }
                 }
                 Console.WriteLine();
             }
+        }
+
+        // commands for agents
+        public int query(int row, int col)
+        {
+            return (int)space[row, col];
+        }
+
+        public bool canPlaceAgent(int row, int col)
+        {
+            if (space[row, col] == NODATA || space[row, col] == DIRTY)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public int initAgent(int row, int col)
+        {
+            if (canPlaceAgent(row, col))
+            {
+                int agentId = -1;
+                if (agents.Keys.Count == 0)
+                {
+                    agentId = 3;
+                }
+                else
+                {
+                    agentId = agents.Keys.Max() + 2;
+                }
+                Console.WriteLine("Added agentId " + agentId);
+                agents.Add(agentId, new AgentState(agentId, row, col));
+                agentSpace[row, col] = agentId;
+                return agentId;
+            }
+            else
+            {
+                throw new ArgumentException("Cannot place an agent at the given row column [" + row + ", " + col + "]");
+            }
+        }
+
+        public bool moveAgent(int agentId, int trow, int tcol)
+        {
+            AgentState a = agents[agentId];
+            if (a != null)
+            {
+                if (Math.Abs(trow - a.row) < 2 && Math.Abs(tcol - a.col) < 2)
+                {
+                    if (space[trow, tcol] != WALL)
+                    {
+                        if (agentSpace[trow, tcol] == NODATA)
+                        {
+                            agentSpace[a.row, a.col] = NODATA;
+                            agentSpace[trow, tcol] = agentId;
+                            a.moveTo(trow, tcol);
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
         }
     }
 }
