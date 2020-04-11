@@ -126,6 +126,16 @@ namespace S2CServer
             return (int)space[row, col];
         }
 
+        public bool isDirty(int row, int col)
+        {
+            return query(row, col) == DIRTY;
+        }
+
+        public bool isClean(int row, int col)
+        {
+            return !isDirty(row, col);
+        }
+
         public bool canPlaceAgent(int row, int col)
         {
             if (space[row, col] == NODATA || space[row, col] == DIRTY)

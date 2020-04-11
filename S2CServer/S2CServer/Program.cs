@@ -31,6 +31,8 @@ namespace S2CServer
             {
                 sp.moveAgent(agent, r, c+1);
             }
+
+            Console.WriteLine();
             sp.printSpace();
         }
     }
