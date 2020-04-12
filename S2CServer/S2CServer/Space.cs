@@ -148,7 +148,7 @@ namespace S2CServer
             }
         }
 
-        public bool moveAgent(int agentId, int trow, int tcol)
+        public void moveAgent(int agentId, int trow, int tcol)
         {
             AgentState a = agents[agentId];
             if (a != null)
@@ -162,15 +162,28 @@ namespace S2CServer
                             agentSpace[a.row, a.col] = NODATA;
                             agentSpace[trow, tcol] = agentId;
                             a.moveTo(trow, tcol);
-                            return true;
+                        } else
+                        {
+                            throw new ArgumentException("There is already an agent there!");
                         }
                     }
+                    else
+                    {
+                        throw new ArgumentException("Cannot move into a WALL!");
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException("New location is not adjacent!");
                 }
             }
-            return false;
+            else
+            {
+                throw new ArgumentException("Agent does not exist!");
+            }
         }
 
-        public bool clean(int agentId, int row, int col)
+        public void clean(int agentId, int row, int col)
         {
             var agent = agents[agentId];
             if (agent != null)
@@ -180,11 +193,19 @@ namespace S2CServer
                     if (isDirty(row, col))
                     {
                         space[row, col] = NODATA;
-                        return true;
                     }
+                    else
+                    {
+                        throw new ArgumentException("Location is not dirty!");
+                    }
+                } else
+                {
+                    throw new ArgumentException("Agent is not at the location to clean!");
                 }
+            } else
+            {
+                throw new ArgumentException("Agent does not exist!");
             }
-            return false;
         }
 
         public int totalDirty()
@@ -205,7 +226,7 @@ namespace S2CServer
 
         public bool hasDirty()
         {
-            return totalDirty() > 1;
+            return totalDirty() > 0;
         }
     }
 }

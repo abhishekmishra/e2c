@@ -9,12 +9,18 @@ namespace S2CServer
     {
         public void CommandExecuted(int agentId, string command)
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Agent {} command {} done.", agentId, command);
         }
 
         public void CommandFailed(int agentId, string command, string reason)
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Agent {0} command {1} failed: {2}", agentId, command, reason);
+        }
+
+        public void NewRound(int roundNum)
+        {
+            Console.Clear();
+            Console.WriteLine("Round #" + roundNum);
         }
 
         public void ShowMessage(string msg)

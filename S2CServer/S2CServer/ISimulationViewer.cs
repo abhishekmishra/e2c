@@ -7,6 +7,8 @@ namespace S2CServer
 {
     interface ISimulationViewer
     {
+        void NewRound(int roundNum);
+
         void ShowState(Matrix<Double> space, Matrix<Double> agentSpace);
 
         void ShowMessage(string msg);
