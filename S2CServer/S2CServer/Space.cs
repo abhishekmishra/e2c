@@ -145,6 +145,16 @@ namespace S2CServer
             return false;
         }
 
+        public (int row, int col) whereAmI(int agentId)
+        {
+            AgentState a = agents[agentId];
+            if(a != null)
+            {
+                return (a.row, a.col);
+            }
+            return (-1, -1);
+        }
+
         public int initAgent(int row, int col)
         {
             if (canPlaceAgent(row, col))
