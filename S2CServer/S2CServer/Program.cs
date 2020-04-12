@@ -9,7 +9,7 @@ namespace S2CServer
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
             Console.WriteLine("Created new space to clean -> ");
-            var sp = new Space(10, 10, 0.1, 0.3);
+            var sp = new Space(10, 10, 0.0, 0.3);
             int agent = 0;
             int r = 0, c = 0;
             for (int i = 0; i < 10; i++)
