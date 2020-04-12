@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using MathNet.Numerics.LinearAlgebra;
@@ -24,8 +25,8 @@ namespace S2CServer
         public static int NODATA = 0;
         public static int WALL = 1;
         public static int DIRTY = 2;
-        private Matrix<Double> space;
-        private Matrix<Double> agentSpace;
+        public Matrix<Double> space { get; private set; }
+        public Matrix<Double> agentSpace { get; private set; }
         private int rows, columns;
         private double wallP, dirtyP;
 
@@ -88,38 +89,6 @@ namespace S2CServer
             }
         }
 
-        public void printSpace()
-        {
-            for (int i = 0; i < space.RowCount; i++)
-            {
-                for (int j = 0; j < space.ColumnCount; j++)
-                {
-                    if (space[i, j] == NODATA)
-                    {
-                        Console.Write("▢");
-                    }
-                    if (space[i, j] == WALL)
-                    {
-                        Console.Write("◉");
-                    }
-                    if (space[i, j] == DIRTY)
-                    {
-                        Console.Write("▩");
-                    }
-                    if (agentSpace[i, j] == NODATA)
-                    {
-                        Console.Write("  ");
-                    }
-                    else
-                    {
-                        Console.Write((char)('A' + (agentSpace[i, j] - 2)/2));
-                        Console.Write(" ");
-                    }
-                }
-                Console.WriteLine();
-            }
-        }
-
         // commands for agents
         public int query(int row, int col)
         {
@@ -148,7 +117,7 @@ namespace S2CServer
         public (int row, int col) whereAmI(int agentId)
         {
             AgentState a = agents[agentId];
-            if(a != null)
+            if (a != null)
             {
                 return (a.row, a.col);
             }
@@ -206,9 +175,9 @@ namespace S2CServer
             var agent = agents[agentId];
             if (agent != null)
             {
-                if(agent.row == row && agent.col == col)
+                if (agent.row == row && agent.col == col)
                 {
-                    if(isDirty(row, col))
+                    if (isDirty(row, col))
                     {
                         space[row, col] = NODATA;
                         return true;
@@ -216,6 +185,27 @@ namespace S2CServer
                 }
             }
             return false;
+        }
+
+        public int totalDirty()
+        {
+            int count = 0;
+            for(int i = 0; i < rows; i++)
+            {
+                for(int j = 0; j < columns; j++)
+                {
+                    if(space[i, j] == DIRTY)
+                    {
+                        count += 1;
+                    }
+                }
+            }
+            return count;
+        }
+
+        public bool hasDirty()
+        {
+            return totalDirty() > 1;
         }
     }
 }

@@ -17,11 +17,21 @@ namespace S2CServer
      */
     public class SimulationController
     {
+
+        private SimConfig simConfig;
+
         public SimulationController()
         {
+            // Load Simulation Configuration
             LoadConfig();
 
-            var sp = new Space(10, 10, 0.0, 0.3);
+            // Create a Cleaning Space as per configuration
+            Console.WriteLine("Created new space to clean -> ");
+            var sp = new Space(simConfig.Space.Rows, simConfig.Space.Columns,
+                simConfig.Space.WallProbability, simConfig.Space.DirtProbability);
+
+            // Create agents as per configuration
+            // and drop them into the space
             int agent = 0;
             int r = 0, c = 0;
             for (int i = 0; i < 10; i++)
@@ -38,7 +48,15 @@ namespace S2CServer
                 }
                 break;
             }
-            sp.printSpace();
+
+            // Setup a Simulation Viewer
+            ISimulationViewer view = new ConsoleSimulationViewer();
+            view.ShowState(sp.space, sp.agentSpace);
+
+            // Start Simulation
+            // Each agent is allowed one command per round of lifecycle
+            // Viewer is updated after every round.
+            // Simulation continues till simulation goal is reached.
             if (agent > 0)
             {
                 try
@@ -60,11 +78,10 @@ namespace S2CServer
             }
 
             Console.WriteLine();
-            sp.printSpace();
-
+            view.ShowState(sp.space, sp.agentSpace);
         }
 
-        private static void LoadConfig()
+        private void LoadConfig()
         {
             // Setup the input
             var input = new StringReader(Document);
@@ -73,8 +90,7 @@ namespace S2CServer
                 .WithNamingConvention(CamelCaseNamingConvention.Instance)
                 .Build();
 
-            var simConfig = deserializer.Deserialize<SimConfig>(input);
-            Console.WriteLine(simConfig.Space.Rows);
+            simConfig = deserializer.Deserialize<SimConfig>(input);
         }
 
         private const string Document = @"---
@@ -100,7 +116,7 @@ namespace S2CServer
         public int Rows;
         public int Columns;
         public double DirtProbability;
-        public double WallProbability; 
+        public double WallProbability;
     }
 
     public class AgentConfig
