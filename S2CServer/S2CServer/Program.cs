@@ -6,6 +6,8 @@ namespace S2CServer
     {
         static void Main(string[] args)
         {
+
+            new SimulationController();
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
             Console.WriteLine("Created new space to clean -> ");
