@@ -107,16 +107,20 @@ namespace S2CCore
                                 (int rx, int cx) = cmd.GetLocation();
                                 sp.moveAgent(a.id, rx, cx);
                             }
+                            cmd.Status = true;
+                            cmd.FailureReason = null;
                             a.CommandResult(true, null);
-                            view.CommandExecuted(a.id, cmd.ToString());
+                            view.CommandExecuted(cmd);
                         }
                         catch (Exception e)
                         {
+                            cmd.Status = false;
+                            cmd.FailureReason = e.Message;
                             a.CommandResult(false, e.Message);
-                            view.CommandFailed(a.id, cmd.ToString(), e.Message);
+                            view.CommandFailed(cmd);
                         }
                     }
-                    Console.WriteLine();
+                    //Console.WriteLine();
                     view.ShowState(sp.space, sp.agentSpace);
                     round += 1;
                 }

@@ -58,20 +58,20 @@ namespace S2CCore
         {
             if(isDirty)
             {
-                return new CleanCommand(row, col);
+                return new CleanCommand(id, row, col);
             } else
             {
                 if(commandSuccessful)
                 {
                     direction = (Direction)rnd.Next(0, 4);
                     (int r, int c) = NewLocation();
-                    return new MoveToComand(r, c);
+                    return new MoveToComand(id, r, c);
                 } 
                 else
                 {
                     direction = (Direction)rnd.Next(0, 4);
                     (int r, int c) = NewLocation();
-                    return new MoveToComand(r, c);
+                    return new MoveToComand(id, r, c);
                 }
             }
         }

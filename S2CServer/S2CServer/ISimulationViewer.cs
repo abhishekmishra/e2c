@@ -13,8 +13,8 @@ namespace S2CCore
 
         void ShowMessage(string msg);
 
-        void CommandExecuted(int agentId, string command);
+        void CommandExecuted(IAgentCommand command);
 
-        void CommandFailed(int agentId, string command, string reason);
+        void CommandFailed(IAgentCommand command);
     }
 }

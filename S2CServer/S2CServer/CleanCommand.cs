@@ -4,22 +4,23 @@ using System.Text;
 
 namespace S2CCore
 {
-    public class CleanCommand : IAgentCommand
+    public class CleanCommand : BaseCommand
     {
         private int row, col;
 
-        public CleanCommand(int row, int col)
+        public CleanCommand(int agentId, int row, int col)
         {
+            AgentId = agentId;
             this.row = row;
             this.col = col;
         }
 
-        public (int row, int col) GetLocation()
+        public override (int row, int col) GetLocation()
         {
             return (row, col);
         }
 
-        public string GetName()
+        public override string GetName()
         {
             return "clean";
         }

@@ -4,22 +4,23 @@ using System.Text;
 
 namespace S2CCore
 {
-    public class MoveToComand: IAgentCommand
+    public class MoveToComand: BaseCommand
     {
         private int row, col;
 
-        public MoveToComand(int row, int col)
+        public MoveToComand(int agentId, int row, int col)
         {
+            AgentId = agentId;
             this.row = row;
             this.col = col;
         }
 
-        public (int row, int col) GetLocation()
+        public override (int row, int col) GetLocation()
         {
             return (row, col);
         }
 
-        public string GetName()
+        public override string GetName()
         {
             return "moveto";
         }

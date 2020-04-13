@@ -8,14 +8,14 @@ namespace S2CCore
 {
     public class ConsoleSimulationViewer : ISimulationViewer
     {
-        public void CommandExecuted(int agentId, string command)
+        public void CommandExecuted(IAgentCommand command)
         {
-            Console.WriteLine("Agent {0} command {1} done.", agentId, command);
+            Console.WriteLine("Agent {0} command {1} done.", command.AgentId, command);
         }
 
-        public void CommandFailed(int agentId, string command, string reason)
+        public void CommandFailed(IAgentCommand command)
         {
-            Console.WriteLine("Agent {0} command {1} failed: {2}", agentId, command, reason);
+            Console.WriteLine("Agent {0} command {1} failed: {2}", command.AgentId, command, command.FailureReason);
         }
 
         public void NewRound(int roundNum)
