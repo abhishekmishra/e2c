@@ -5,7 +5,7 @@ using System.Text;
 
 namespace S2CCore
 {
-    interface ISimulationViewer
+    public interface ISimulationViewer
     {
         void NewRound(int roundNum);
 

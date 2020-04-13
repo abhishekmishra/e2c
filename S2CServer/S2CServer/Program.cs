@@ -8,7 +8,8 @@ namespace S2CCore
         {
 
             Console.OutputEncoding = System.Text.Encoding.UTF8;
-            var sc = new SimulationController();
+            var sc = new Simulation();
+            sc.Run();
         }
     }
 }

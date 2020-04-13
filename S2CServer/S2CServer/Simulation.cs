@@ -9,44 +9,46 @@ using YamlDotNet.Serialization.NamingConventions;
 namespace S2CCore
 {
     /**
-     * The task of the simulation controller is to create
+     * The task of the simulation class is to create
      * a new simulation and maintain it's lifecycle.
      *
      * This includes creating the cleaning space, creating agents,
      * keeping score, initializing the display (if any) and also
      * ending the simulation when some goal is reached.
      */
-    public class SimulationController
+    public class Simulation
     {
 
-        private SimConfig simConfig;
-        List<ICleaningAgent> agents;
+        public SimConfig SimulationConfig { get; private set; }
+        private ISimulationViewer view;
+        private Space sp;
+        private List<ICleaningAgent> agents;
 
-        public SimulationController()
+        public Simulation()
         {
             // Load Simulation Configuration
             LoadConfig();
 
             // Create a Cleaning Space as per configuration
             Console.WriteLine("Created new space to clean -> ");
-            var sp = new Space(simConfig.Space.Rows, simConfig.Space.Columns,
-                simConfig.Space.WallProbability, simConfig.Space.DirtProbability);
+            sp = new Space(SimulationConfig.Space.Rows, SimulationConfig.Space.Columns,
+                SimulationConfig.Space.WallProbability, SimulationConfig.Space.DirtProbability);
 
             // Create agents as per configuration
             // and drop them into the space
             agents = new List<ICleaningAgent>();
-            int agent = 0;
+            int agentId = 0;
             int r = 0, c = 0;
             for (int i = 0; i < 10; i++)
             {
                 try
                 {
-                    agent = sp.initAgent(i, i);
+                    agentId = sp.initAgent(i, i);
                     r = c = i;
                     var a = new SimpleCleaningAgent();
                     agents.Add(a);
                     a.SetLocation(r, c);
-                    a.id = agent;
+                    a.id = agentId;
                 }
                 catch (Exception e)
                 {
@@ -55,16 +57,32 @@ namespace S2CCore
                 }
                 break;
             }
+        }
 
-            // Setup a Simulation Viewer
-            ISimulationViewer view = new ConsoleSimulationViewer();
+        public void SetView(ISimulationViewer v)
+        {
+            view = v;
+        }
+
+        private void InitView()
+        {
+            // Setup a Console Simulation Viewer, if no View exists
+            if (view == null)
+            {
+                view = new ConsoleSimulationViewer();
+            }
             view.ShowState(sp.space, sp.agentSpace);
+        }
+
+        public void Run()
+        {
+            InitView();
 
             // Start Simulation
             // Each agent is allowed one command per round of lifecycle
             // Viewer is updated after every round.
             // Simulation continues till simulation goal is reached.
-            if (agent > 0)
+            if (agents.Count > 0)
             {
                 int round = 0;
                 while (sp.hasDirty())
@@ -100,7 +118,6 @@ namespace S2CCore
                     }
                     Console.WriteLine();
                     view.ShowState(sp.space, sp.agentSpace);
-                    Thread.Sleep(50);
                     round += 1;
                 }
             }
@@ -115,7 +132,7 @@ namespace S2CCore
                 .WithNamingConvention(CamelCaseNamingConvention.Instance)
                 .Build();
 
-            simConfig = deserializer.Deserialize<SimConfig>(input);
+            SimulationConfig = deserializer.Deserialize<SimConfig>(input);
         }
 
         private const string Document = @"---
@@ -132,20 +149,20 @@ namespace S2CCore
 
     public class SimConfig
     {
-        public SpaceConfig Space;
-        public List<AgentConfig> Agents;
+        public SpaceConfig Space { get; set; }
+        public List<AgentConfig> Agents { get; set; }
     }
 
     public class SpaceConfig
     {
-        public int Rows;
-        public int Columns;
-        public double DirtProbability;
-        public double WallProbability;
+        public int Rows { get; set; }
+        public int Columns { get; set; }
+        public double DirtProbability { get; set; }
+        public double WallProbability { get; set; }
     }
 
     public class AgentConfig
     {
-        public string Type;
+        public string Type { get; set; }
     }
 }

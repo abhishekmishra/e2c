@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace S2CCore
 {
@@ -58,6 +59,7 @@ namespace S2CCore
                 }
                 Console.WriteLine();
             }
+            Thread.Sleep(50);
         }
     }
 }
