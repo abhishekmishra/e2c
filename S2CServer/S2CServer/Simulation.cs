@@ -71,6 +71,7 @@ namespace S2CCore
             {
                 view = new ConsoleSimulationViewer();
             }
+            view.NewRound(0);
             view.ShowState(sp.space, sp.agentSpace);
         }
 
@@ -84,7 +85,7 @@ namespace S2CCore
             // Simulation continues till simulation goal is reached.
             if (agents.Count > 0)
             {
-                int round = 0;
+                int round = 1;
                 while (sp.hasDirty())
                 {
                     view.NewRound(round);

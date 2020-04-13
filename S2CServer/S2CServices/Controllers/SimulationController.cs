@@ -54,10 +54,17 @@ namespace S2CServices.Controllers
             return "started";
         }
 
-        [HttpGet("round")]
-        public int GetCurrentRound()
+        [HttpGet("roundnum")]
+        public int GetCurrentRoundNum()
         {
             return _simViewer.CurrentRound;
         }
+
+        [HttpGet("round/{round}")]
+        public WebSimulationViewState GetRound(int round)
+        {
+            return _simViewer.ViewState(round);
+        }
+
     }
 }
