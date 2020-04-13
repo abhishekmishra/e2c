@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using S2CCore;
 
 namespace S2CServices
 {
@@ -26,6 +27,13 @@ namespace S2CServices
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            WebSimulationViewer simViewer = new WebSimulationViewer();
+            Simulation simulation = new Simulation();
+            simulation.SetView(simViewer);
+
+            services.AddSingleton<Simulation>(simulation);
+            services.AddSingleton<WebSimulationViewer>(simViewer);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

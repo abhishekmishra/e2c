@@ -18,13 +18,14 @@ namespace S2CServices.Controllers
         };
 
         private readonly ILogger<SimulationController> _logger;
-        private static readonly WebSimulationViewer simViewer = new WebSimulationViewer();
-        private readonly Simulation simulation = new Simulation();
+        private readonly WebSimulationViewer _simViewer;
+        private readonly Simulation _sim;
 
-        public SimulationController(ILogger<SimulationController> logger)
+        public SimulationController(ILogger<SimulationController> logger, WebSimulationViewer simViewer, Simulation sim)
         {
             _logger = logger;
-            simulation.SetView(simViewer);
+            _simViewer = simViewer;
+            _sim = sim;
         }
 
         [HttpGet]
@@ -43,20 +44,20 @@ namespace S2CServices.Controllers
         [HttpGet("config")]
         public SimConfig GetSimConfig()
         {
-            return simulation.SimulationConfig;
+            return _sim.SimulationConfig;
         }
 
         [HttpGet("start")]
         public string StartSim()
         {
-            simulation.Run();
+            _sim.Run();
             return "started";
         }
 
         [HttpGet("round")]
         public int GetCurrentRound()
         {
-            return simViewer.CurrentRound;
+            return _simViewer.CurrentRound;
         }
     }
 }
