@@ -1,5 +1,5 @@
 ﻿using System;
-namespace S2CServer
+namespace S2CCore
 {
     public interface ICleaningAgent
     {

@@ -6,7 +6,7 @@ using YamlDotNet.RepresentationModel;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
-namespace S2CServer
+namespace S2CCore
 {
     /**
      * The task of the simulation controller is to create

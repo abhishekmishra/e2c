@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace S2CServer
+namespace S2CCore
 {
     public class ConsoleSimulationViewer : ISimulationViewer
     {

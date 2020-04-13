@@ -8,7 +8,7 @@ using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 
 
-namespace S2CServer
+namespace S2CCore
 {
     /*
     * The space to clean is a 2D space at the moment where there are three kinds of areas

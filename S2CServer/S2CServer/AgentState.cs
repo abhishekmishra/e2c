@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Text;
 
-namespace S2CServer
+namespace S2CCore
 {
     class AgentState
     {
