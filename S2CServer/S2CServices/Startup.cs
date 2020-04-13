@@ -54,6 +54,8 @@ namespace S2CServices
             {
                 endpoints.MapControllers();
             });
+
+            app.UseStaticFiles();
         }
     }
 }
