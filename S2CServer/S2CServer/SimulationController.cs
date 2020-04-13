@@ -79,7 +79,6 @@ namespace S2CServer
                         var cmd = a.GetCommand();
                         try
                         {
-                            Console.WriteLine(cmd);
                             if (cmd is CleanCommand)
                             {
                                 (int rx, int cx) = cmd.GetLocation();
@@ -124,7 +123,7 @@ namespace S2CServer
                 rows: 4
                 columns: 4
                 dirtProbability: 0.3
-                wallProbability: 0.0
+                wallProbability: 0.2
 
             agents:
                 - type: simple

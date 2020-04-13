@@ -150,6 +150,7 @@ namespace S2CServer
 
         public void moveAgent(int agentId, int trow, int tcol)
         {
+            checkRange(trow, tcol);
             AgentState a = agents[agentId];
             if (a != null)
             {
@@ -162,7 +163,8 @@ namespace S2CServer
                             agentSpace[a.row, a.col] = NODATA;
                             agentSpace[trow, tcol] = agentId;
                             a.moveTo(trow, tcol);
-                        } else
+                        }
+                        else
                         {
                             throw new ArgumentException("There is already an agent there!");
                         }
@@ -185,6 +187,7 @@ namespace S2CServer
 
         public void clean(int agentId, int row, int col)
         {
+            checkRange(row, col);
             var agent = agents[agentId];
             if (agent != null)
             {
@@ -198,11 +201,13 @@ namespace S2CServer
                     {
                         throw new ArgumentException("Location is not dirty!");
                     }
-                } else
+                }
+                else
                 {
                     throw new ArgumentException("Agent is not at the location to clean!");
                 }
-            } else
+            }
+            else
             {
                 throw new ArgumentException("Agent does not exist!");
             }
@@ -211,11 +216,11 @@ namespace S2CServer
         public int totalDirty()
         {
             int count = 0;
-            for(int i = 0; i < rows; i++)
+            for (int i = 0; i < rows; i++)
             {
-                for(int j = 0; j < columns; j++)
+                for (int j = 0; j < columns; j++)
                 {
-                    if(space[i, j] == DIRTY)
+                    if (space[i, j] == DIRTY)
                     {
                         count += 1;
                     }
@@ -227,6 +232,20 @@ namespace S2CServer
         public bool hasDirty()
         {
             return totalDirty() > 0;
+        }
+
+        public void checkRange(int row, int col)
+        {
+            if (row < 0 || row >= this.rows || col < 0 || col >= this.columns)
+            {
+                throw new ArgumentException("Row/column is out of range: "
+                    + coordsToString(row, col));
+            }
+        }
+
+        public static String coordsToString(int row, int col)
+        {
+            return "[" + row + ", " + col + "]";
         }
     }
 }

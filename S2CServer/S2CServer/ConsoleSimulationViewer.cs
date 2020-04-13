@@ -9,7 +9,7 @@ namespace S2CServer
     {
         public void CommandExecuted(int agentId, string command)
         {
-            Console.WriteLine("Agent {} command {} done.", agentId, command);
+            Console.WriteLine("Agent {0} command {1} done.", agentId, command);
         }
 
         public void CommandFailed(int agentId, string command, string reason)
