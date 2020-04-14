@@ -33,15 +33,22 @@ namespace S2CCore
 
         public Simulation()
         {
+            // Load Default Simulation Configuration
+            LoadConfig();
+
+            _Init();
+        }
+
+        public Simulation(SimConfig cfg)
+        {
+            SimulationConfig = cfg;
+
             _Init();
         }
 
         private void _Init()
         {
             State = SimState.STOPPED;
-
-            // Load Simulation Configuration
-            LoadConfig();
 
             // Create a Cleaning Space as per configuration
             Console.WriteLine("Created new space to clean -> ");

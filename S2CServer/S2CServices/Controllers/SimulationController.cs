@@ -25,7 +25,13 @@ namespace S2CServices.Controllers
         [HttpGet("new/default")]
         public int NewSim()
         {
-            return _mgr.NewSim();
+            return _mgr.NewSim(null);
+        }
+
+        [HttpPost("new")]
+        public int NewSim(SimConfig cfg)
+        {
+            return _mgr.NewSim(cfg);
         }
 
         [HttpGet("{id}/config")]

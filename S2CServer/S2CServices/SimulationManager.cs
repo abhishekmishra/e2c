@@ -32,14 +32,24 @@ namespace S2CServices
             return _count + 1;
         }
 
-        public int NewSim()
+        public int NewSim(SimConfig cfg)
         {
             _simsMutex.WaitOne();
             _count = _count + 1;
             _logger.LogInformation("Creating new sim id#{1}", _count);
-            Simulation s = new Simulation();
+
+            Simulation s;
+            if (cfg == null)
+            {
+                s = new Simulation();
+            } else
+            {
+                s = new Simulation(cfg);
+            }
+
             WebSimulationViewer w = new WebSimulationViewer();
             s.SetView(w);
+
             _sims.Add(s);
             _views.Add(w);
             _simsMutex.ReleaseMutex();
