@@ -1,4 +1,18 @@
-﻿function new_sim() {
+﻿var simConfig = {
+    space: {
+        rows: 5,
+        columns: 5,
+        dirtProbability: 0.3,
+        wallProbability: 0.1
+    },
+    agents: [
+        {
+            type: "simple"
+        }
+    ]
+}
+
+function new_sim() {
     fetch('/simulation/new/default')
         .then((response) => {
             return response.text();
@@ -15,6 +29,13 @@
                     if (data == "started") {
                         fetchRound(id, 0);
                     }
+                }).then(() => {
+                    fetch('/simulation/' + id + '/config')
+                    .then((response) => {
+                        return response.json();
+                    }).then((data) => {
+                        console.log(data);
+                    });
                 });
         });
 }
@@ -51,7 +72,7 @@ function fetchRound(id, roundNum) {
             for (var i = 0; i < rows; i++) {
                 for (var j = 0; j < cols; j++) {
                     var fill = "orange";
-                    console.log(status.spaceArr[i][j]);
+                    //console.log(status.spaceArr[i][j]);
                     switch (status.spaceArr[i][j]) {
                         case 0: fill = "red";
                             break;
