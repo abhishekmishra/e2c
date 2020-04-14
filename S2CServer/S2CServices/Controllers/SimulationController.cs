@@ -28,18 +28,18 @@ namespace S2CServices.Controllers
             _sim = sim;
         }
 
-        [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
-        {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
-        }
+        //[HttpGet]
+        //public IEnumerable<WeatherForecast> Get()
+        //{
+        //    var rng = new Random();
+        //    return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        //    {
+        //        Date = DateTime.Now.AddDays(index),
+        //        TemperatureC = rng.Next(-20, 55),
+        //        Summary = Summaries[rng.Next(Summaries.Length)]
+        //    })
+        //    .ToArray();
+        //}
 
         [HttpGet("config")]
         public SimConfig GetSimConfig()
@@ -50,8 +50,14 @@ namespace S2CServices.Controllers
         [HttpGet("start")]
         public string StartSim()
         {
-            _sim.Run();
-            return "started";
+            if (_sim.State == SimState.STOPPED)
+            {
+                _sim.Run();
+                return "started";
+            } else
+            {
+                return "error: already running";
+            }
         }
 
         [HttpGet("roundnum")]
