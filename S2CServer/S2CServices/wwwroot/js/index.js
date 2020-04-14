@@ -12,8 +12,29 @@
     ]
 }
 
+$("#configModal").on("shown.bs.modal", function (e) {
+    $('#numRows').val(simConfig.space.rows);
+    $('#numCols').val(simConfig.space.columns);
+    $('#dirtProb').val(simConfig.space.dirtProbability);
+    $('#wallProb').val(simConfig.space.wallProbability);
+});
+
+$("#configModalSave").click((e) => {
+    simConfig.space.rows = parseInt($('#numRows').val());
+    simConfig.space.columns = parseInt($('#numCols').val());
+    simConfig.space.dirtProbability = parseFloat($('#dirtProb').val());
+    simConfig.space.wallProbability = parseFloat($('#wallProb').val());
+    $("#configModal").modal("toggle");
+});
+
 function new_sim() {
-    fetch('/simulation/new/default')
+    fetch('/simulation/new', {
+        method: 'POST', // or 'PUT'
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(simConfig)
+    })
         .then((response) => {
             return response.text();
         })
@@ -31,11 +52,11 @@ function new_sim() {
                     }
                 }).then(() => {
                     fetch('/simulation/' + id + '/config')
-                    .then((response) => {
-                        return response.json();
-                    }).then((data) => {
-                        console.log(data);
-                    });
+                        .then((response) => {
+                            return response.json();
+                        }).then((data) => {
+                            simConfig = data;
+                        });
                 });
         });
 }
