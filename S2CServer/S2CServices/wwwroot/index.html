@@ -2,27 +2,70 @@
 <html>
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>S2C: Space To Clean Simulator</title>
 
-    <!--Import materialize.css-->
-    <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
-
+    <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css" />
 </head>
 <body>
-    <div>
-        <a class="waves-effect waves-light btn" onclick="new_sim();">New Simulation</a>
+    <div class="container-lg">
+        <nav class="navbar navbar-dark bg-dark">
+            <span class="navbar-brand mb-0 h1">S2C: Space To Clean Simulator</span>
+            <ul class="nav justify-content-right">
+                <li class="nav-item">
+                    <a class="btn btn-primary" onclick="new_sim();">New Simulation</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-secondary disabled" onclick="new_sim();">Stop Simulation</a>
+                </li>
+            </ul>
+        </nav>
 
-        <h5>Simulation Status: <span id="simulation_status"></span></h5>
-        <h6>Round #: <span id="round_num"></span></h6>
-
-        <hr />
-
-        <div id="sim">
+        <div class="row">
+            <div class="col-8 h-100">
+                <div id="sim" class="center border border-dark w-90 h-90">
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card">
+                    <div class="card-header">
+                        Simulation #<span id="round_num"></span>
+                    </div>
+                    <div class="card-body">
+                        <span class="card-title"></span>
+                        <table class="table table-borderless w-100">
+                            <tr>
+                                <td>Status: </td>
+                                <td><span id="simulation_status">N/A</span></td>
+                            </tr>
+                            <tr>
+                                <td>Dimensions: </td>
+                                <td><span id="dx">0</span>X<span id="dy">0</span></td>
+                            </tr>
+                            <tr>
+                                <td>Probability of Dirt: </td>
+                                <td><span id="prob_dirt">0</span></td>
+                            </tr>
+                            <tr>
+                                <td>Probability of Wall: </td>
+                                <td><span id="prob_wall">0</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        Messages
+                    </div>
+                    <div class="card-body">
+                        <span class="card-title"></span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
     <!--JavaScript at end of body for optimized loading-->
-    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script src="js/d3.min.js"></script>
     <script src="js/index.js"></script>
 </body>
