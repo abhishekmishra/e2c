@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/S2CServer/S2CServer/S2CServer.csproj",
+                "${workspaceFolder}/S2CServer/S2CServices/S2CServices.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/S2CServer/S2CServer/S2CServer.csproj",
+                "${workspaceFolder}/S2CServer/S2CServices/S2CServices.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -32,7 +32,7 @@
             "args": [
                 "watch",
                 "run",
-                "${workspaceFolder}/S2CServer/S2CServer/S2CServer.csproj",
+                "${workspaceFolder}/S2CServer/S2CServices/S2CServices.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
