@@ -1,17 +1,27 @@
-﻿fetch('/simulation/start')
-    .then((response) => {
-        return response.text();
-    })
-    .then((data) => {
-        d3.select("#simulation_status").text(data);
-        console.log(data);
-        if (data == "started") {
-            fetchRound(0);
-        }
-    });
+﻿function new_sim() {
+    fetch('/simulation/new/default')
+        .then((response) => {
+            debugger;
+            return response.text();
+        })
+        .then((data) => {
+            var id = data;
+            fetch('/simulation/' + id + '/start')
+                .then((response) => {
+                    return response.text();
+                })
+                .then((data) => {
+                    d3.select("#simulation_status").text(data);
+                    console.log(data);
+                    if (data == "started") {
+                        fetchRound(id, 0);
+                    }
+                });
+        });
+}
 
-function fetchRound(roundNum) {
-    fetch('/simulation/round/' + roundNum)
+function fetchRound(id, roundNum) {
+    fetch('/simulation/' + id + '/round/' + roundNum)
         .then((response) => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -37,6 +47,6 @@ function fetchRound(roundNum) {
                     return d;
                 });
 
-            fetchRound(roundNum + 1);
+            fetchRound(id, roundNum + 1);
         });
 }
