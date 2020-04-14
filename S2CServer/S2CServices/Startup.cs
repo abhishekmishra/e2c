@@ -34,6 +34,7 @@ namespace S2CServices
 
             services.AddSingleton<Simulation>(simulation);
             services.AddSingleton<WebSimulationViewer>(simViewer);
+            services.AddSingleton<SimulationManager, SimulationManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

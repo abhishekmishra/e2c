@@ -12,64 +12,51 @@ namespace S2CServices.Controllers
     [Route("[controller]")]
     public class SimulationController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
         private readonly ILogger<SimulationController> _logger;
-        private readonly WebSimulationViewer _simViewer;
-        private readonly Simulation _sim;
+        private readonly SimulationManager _mgr;
 
-        public SimulationController(ILogger<SimulationController> logger, WebSimulationViewer simViewer, Simulation sim)
+        public SimulationController(ILogger<SimulationController> logger,
+            SimulationManager mgr)
         {
             _logger = logger;
-            _simViewer = simViewer;
-            _sim = sim;
+            _mgr = mgr;
         }
 
-        //[HttpGet]
-        //public IEnumerable<WeatherForecast> Get()
-        //{
-        //    var rng = new Random();
-        //    return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        //    {
-        //        Date = DateTime.Now.AddDays(index),
-        //        TemperatureC = rng.Next(-20, 55),
-        //        Summary = Summaries[rng.Next(Summaries.Length)]
-        //    })
-        //    .ToArray();
-        //}
-
-        [HttpGet("config")]
-        public SimConfig GetSimConfig()
+        [HttpGet("new/default")]
+        public int NewSim()
         {
-            return _sim.SimulationConfig;
+            return _mgr.NewSim();
         }
 
-        [HttpGet("start")]
-        public string StartSim()
+        [HttpGet("{id}/config")]
+        public SimConfig GetSimConfig(int id)
         {
-            if (_sim.State == SimState.STOPPED)
+            return _mgr.GetSimConfig(id);
+        }
+
+        [HttpGet("{id}/start")]
+        public string StartSim(int id)
+        {
+            try
             {
-                _sim.Run();
+                _mgr.StartSim(id);
                 return "started";
-            } else
+            } catch(Exception e)
             {
-                return "error: already running";
+                return "error: " + e.Message;
             }
         }
 
-        [HttpGet("roundnum")]
-        public int GetCurrentRoundNum()
+        [HttpGet("{id}/roundnum")]
+        public int GetCurrentRoundNum(int id)
         {
-            return _simViewer.CurrentRound;
+            return _mgr.GetView(id).CurrentRound;
         }
 
-        [HttpGet("round/{round}")]
-        public WebSimulationViewState GetRound(int round)
+        [HttpGet("{id}/round/{round}")]
+        public WebSimulationViewState GetRound(int id, int round)
         {
-            return _simViewer.ViewState(round);
+            return _mgr.GetView(id).ViewState(round);
         }
 
     }
