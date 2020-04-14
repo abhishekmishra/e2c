@@ -14,7 +14,7 @@ namespace S2CCore
         int row, col;
         bool isDirty = false;
 
-        IAgentCommand lastCommand;
+        // IAgentCommand lastCommand;
         bool commandSuccessful = true;
         string commandFailureReason;
         Direction direction = Direction.E;
