@@ -2,12 +2,18 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using YamlDotNet.RepresentationModel;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
 namespace S2CCore
 {
+    public enum SimState
+    {
+        STOPPED = 0, RUNNING, STOPPING
+    }
+
     /**
      * The task of the simulation class is to create
      * a new simulation and maintain it's lifecycle.
@@ -23,9 +29,17 @@ namespace S2CCore
         private ISimulationViewer view;
         private Space sp;
         private List<ICleaningAgent> agents;
+        public SimState State { get; private set; }
 
         public Simulation()
         {
+            _Init();
+        }
+
+        private void _Init()
+        {
+            State = SimState.STOPPED;
+
             // Load Simulation Configuration
             LoadConfig();
 
@@ -64,7 +78,7 @@ namespace S2CCore
             view = v;
         }
 
-        private void InitView()
+        private void _InitView()
         {
             // Setup a Console Simulation Viewer, if no View exists
             if (view == null)
@@ -77,7 +91,21 @@ namespace S2CCore
 
         public void Run()
         {
-            InitView();
+            if (State == SimState.STOPPED)
+            {
+                Task.Run(() => _Run());
+            }
+            else
+            {
+                throw new ArgumentException("Simulation is not stopped.");
+            }
+        }
+
+        private void _Run()
+        {
+            State = SimState.RUNNING;
+
+            _InitView();
 
             // Start Simulation
             // Each agent is allowed one command per round of lifecycle
@@ -126,6 +154,8 @@ namespace S2CCore
                     round += 1;
                 }
             }
+
+            _Init();
         }
 
         private void LoadConfig()
