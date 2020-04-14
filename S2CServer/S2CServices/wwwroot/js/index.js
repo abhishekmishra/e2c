@@ -110,15 +110,10 @@ function fetchRound(id, roundNum) {
                         .attr("fill", fill);
                 }
             }
-            //svgCtr.data(status.spaceArr)
-            //    .enter().append("tr")
-            //    .selectAll("td")
-            //    .data(function (d, i, j) { return d; }).enter().append("td")
-            //    .text(function (d, i, j) {
-            //        console.log(d);
-            //        return d;
-            //    });
 
+            status.commands.forEach(element => {
+                console.log(element);
+            });
             fetchRound(id, roundNum + 1);
         });
 }
