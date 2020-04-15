@@ -94,8 +94,7 @@ namespace S2CCore
             {
                 view = new ConsoleSimulationViewer();
             }
-            view.NewRound(0);
-            view.ShowState(sp.space, sp.agentSpace);
+            view.ShowState(0, new List<IAgentCommand>(), sp.space, sp.agentSpace);
         }
 
         public void Run()
@@ -107,6 +106,14 @@ namespace S2CCore
             else
             {
                 throw new ArgumentException("Simulation is not stopped.");
+            }
+        }
+
+        public void RunForeground()
+        {
+            if (State == SimState.STOPPED)
+            {
+                _Run();
             }
         }
 
@@ -132,7 +139,7 @@ namespace S2CCore
                         break;
                     }
 
-                    view.NewRound(round);
+                    List<IAgentCommand> commands = new List<IAgentCommand>();
                     foreach (var a in agents)
                     {
                         (int row, int col) = sp.whereAmI(a.AgentId);
@@ -152,18 +159,18 @@ namespace S2CCore
                             }
                             cmd.Status = true;
                             cmd.FailureReason = null;
+                            commands.Add(cmd);
                             a.CommandResult(true, null);
-                            view.CommandExecuted(cmd);
                         }
                         catch (Exception e)
                         {
                             cmd.Status = false;
                             cmd.FailureReason = e.Message;
+                            commands.Add(cmd);
                             a.CommandResult(false, e.Message);
-                            view.CommandFailed(cmd);
                         }
                     }
-                    view.ShowState(sp.space, sp.agentSpace);
+                    view.ShowState(round, commands, sp.space, sp.agentSpace);
                     round += 1;
                 }
             }

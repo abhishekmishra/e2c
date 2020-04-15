@@ -7,11 +7,6 @@ namespace S2CCore
 {
     public class ScoreKeeper : ISimulationViewer
     {
-        public void Aborted()
-        {
-            throw new NotImplementedException();
-        }
-
         public void CommandExecuted(IAgentCommand command)
         {
             throw new NotImplementedException();
@@ -22,17 +17,27 @@ namespace S2CCore
             throw new NotImplementedException();
         }
 
-        public void NewRound(int roundNum)
-        {
-            throw new NotImplementedException();
-        }
-
         public void ShowMessage(string msg)
         {
             throw new NotImplementedException();
         }
 
-        public void ShowState(Matrix<double> space, Matrix<double> agentSpace)
+        public void ShowState(int simRound, List<IAgentCommand> commands, Matrix<double> space, Matrix<double> agentSpace)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SimAborted()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SimComplete()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SimStarted(int simNum, string name)
         {
             throw new NotImplementedException();
         }

@@ -16,12 +16,12 @@ namespace S2CServices
         private Dictionary<int, Matrix<double>> spaceHist;
         private Dictionary<int, Matrix<double>> agentSpaceHist;
 
-        public bool SimAborted { get; set; }
+        public SimState State { get; set; }
 
         public WebSimulationViewer()
         {
             Init();
-            SimAborted = false;
+            State = SimState.STOPPED;
         }
 
         private void Init()
@@ -33,38 +33,42 @@ namespace S2CServices
             agentSpaceHist = new Dictionary<int, Matrix<double>>();
         }
 
-        public void CommandExecuted(IAgentCommand command)
-        {
-            commands[CurrentRound].Add(command);
-        }
-
-        public void CommandFailed(IAgentCommand command)
-        {
-            commands[CurrentRound].Add(command);
-        }
-
-        public void NewRound(int roundNum)
-        {
-            if(roundNum == 0 && roundNum < CurrentRound)
-            {
-                Init();
-            }
-            CurrentRound = roundNum;
-            commands.Add(CurrentRound, new List<IAgentCommand>());
-            messages.Add(CurrentRound, new List<string>());
-        }
-
         public void ShowMessage(string msg)
         {
             messages[CurrentRound].Add(msg);
         }
 
-        public void ShowState(Matrix<double> space, Matrix<double> agentSpace)
+        public void ShowState(int simRound, List<IAgentCommand> cmds,
+            Matrix<Double> space, Matrix<Double> agentSpace)
         {
+            if (simRound == 0 && simRound < CurrentRound)
+            {
+                Init();
+            }
+            CurrentRound = simRound;
+            List<IAgentCommand> cmd_list = new List<IAgentCommand>(cmds);
+            commands.Add(CurrentRound, cmd_list);
+            messages.Add(CurrentRound, new List<string>());
+
             spaceHist.Add(CurrentRound, Matrix<double>.Build.DenseOfMatrix(space));
             agentSpaceHist.Add(CurrentRound, Matrix<double>.Build.DenseOfMatrix(agentSpace));
         }
 
+
+        public void SimAborted()
+        {
+            State = SimState.ABORTED;
+        }
+
+        public void SimStarted(int simNum, string name)
+        {
+            State = SimState.RUNNING;
+        }
+
+        public void SimComplete()
+        {
+            State = SimState.STOPPED;
+        }
         public WebSimulationViewState ViewState(int round)
         {
             if (round <= CurrentRound)
@@ -73,10 +77,10 @@ namespace S2CServices
                 s.RoundNum = round;
                 s.Commands = commands[round];
                 s.Messages = messages[round];
-                
+
                 var a = spaceHist[round];
                 s.SpaceArr = new List<List<double>>();
-                for(int i = 0; i < a.RowCount; i++)
+                for (int i = 0; i < a.RowCount; i++)
                 {
                     s.SpaceArr.Add(new List<double>());
                     for (int j = 0; j < a.ColumnCount; j++)
@@ -84,7 +88,7 @@ namespace S2CServices
                         s.SpaceArr[i].Add(a[i, j]);
                     }
                 }
-                
+
                 a = agentSpaceHist[round];
                 s.AgentSpaceArr = new List<List<double>>();
                 for (int i = 0; i < a.RowCount; i++)
@@ -96,15 +100,12 @@ namespace S2CServices
                     }
                 }
                 return s;
-            }else
+            }
+            else
             {
                 return null;
             }
         }
 
-        public void Aborted()
-        {
-            SimAborted = true;
-        }
     }
 }

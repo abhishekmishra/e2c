@@ -7,16 +7,15 @@ namespace S2CCore
 {
     public interface ISimulationViewer
     {
-        void NewRound(int roundNum);
+        void SimStarted(int simNum, string name);
 
-        void ShowState(Matrix<Double> space, Matrix<Double> agentSpace);
+        void SimComplete();
+
+        void SimAborted();
+
+        void ShowState(int simRound, List<IAgentCommand> commands,
+            Matrix<Double> space, Matrix<Double> agentSpace);
 
         void ShowMessage(string msg);
-
-        void CommandExecuted(IAgentCommand command);
-
-        void CommandFailed(IAgentCommand command);
-
-        void Aborted();
     }
 }

@@ -8,34 +8,39 @@ namespace S2CCore
 {
     public class ConsoleSimulationViewer : ISimulationViewer
     {
-        public void Aborted()
+        public void SimAborted()
         {
             Console.WriteLine("Simulation Aborted");
         }
 
-        public void CommandExecuted(IAgentCommand command)
+        public void SimStarted(int simNum, string name)
         {
-            Console.WriteLine("Agent {0} command {1} done.", command.AgentId, command);
+            Console.WriteLine("Simulation Started");
         }
 
-        public void CommandFailed(IAgentCommand command)
+        public void SimComplete()
         {
-            Console.WriteLine("Agent {0} command {1} failed: {2}", command.AgentId, command, command.FailureReason);
+            Console.WriteLine("Simulation Complete");
         }
 
-        public void NewRound(int roundNum)
+        public void ShowState(int simRound, List<IAgentCommand> commands,
+            Matrix<Double> space, Matrix<Double> agentSpace)
         {
             Console.Clear();
-            Console.WriteLine("Round #" + roundNum);
-        }
+            Console.WriteLine("Round #" + simRound);
 
-        public void ShowMessage(string msg)
-        {
-            throw new NotImplementedException();
-        }
+            foreach (var command in commands)
+            {
+                if(command.Status)
+                {
+                    Console.WriteLine("Agent {0} command {1} done.", command.AgentId, command);
+                }
+                else
+                {
+                    Console.WriteLine("Agent {0} command {1} failed: {2}", command.AgentId, command, command.FailureReason);
+                }
+            }
 
-        public void ShowState(Matrix<double> space, Matrix<double> agentSpace)
-        {
             for (int i = 0; i < space.RowCount; i++)
             {
                 for (int j = 0; j < space.ColumnCount; j++)
@@ -65,6 +70,11 @@ namespace S2CCore
                 Console.WriteLine();
             }
             Thread.Sleep(50);
+        }
+
+        public void ShowMessage(string msg)
+        {
+            throw new NotImplementedException();
         }
     }
 }
