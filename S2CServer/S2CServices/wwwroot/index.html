@@ -9,7 +9,7 @@
 </head>
 <body>
     <div class="container-lg">
-        <nav class="navbar navbar-dark bg-dark">
+        <nav class="navbar navbar-dark bg-dark m-0 p-2">
             <span class="navbar-brand mb-0 h1">S2C: Space To Clean Simulator</span>
             <ul class="nav justify-content-right">
                 <li class="nav-item">
@@ -22,12 +22,12 @@
             </ul>
         </nav>
 
-        <div class="row mt-2">
-            <div class="col-8 h-100">
+        <div class="row m-0">
+            <div class="col-8 h-100 bg-dark">
                 <div id="sim" class="center border border-dark w-90 h-90">
                 </div>
             </div>
-            <div class="col-4">
+            <div class="col-4 bg-dark">
                 <div class="card">
                     <div class="card-header">
                         Simulation #<span id="round_num"></span>
@@ -65,9 +65,12 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row m-0" style="height: 200px;">
             <div class="col-12 bg-dark">
                 <h5 class="text-light">Agent Commands</h5>
+                <div class="bg-dark text-primary" style="height: 180px; overflow-y:scroll" id="agent_commands">
+
+                </div>
             </div>
         </div>
 

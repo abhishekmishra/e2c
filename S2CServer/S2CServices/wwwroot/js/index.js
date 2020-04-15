@@ -12,6 +12,8 @@
     ]
 }
 
+var cmdsCount = 0;
+
 $("#configModal").on("shown.bs.modal", function (e) {
     $('#numRows').val(simConfig.space.rows);
     $('#numCols').val(simConfig.space.columns);
@@ -28,6 +30,8 @@ $("#configModalSave").click((e) => {
 });
 
 function new_sim() {
+    cmdsCount = 0;
+    $("#agent_commands").html("");
     fetch('/simulation/new', {
         method: 'POST', // or 'PUT'
         headers: {
@@ -111,9 +115,23 @@ function fetchRound(id, roundNum) {
                 }
             }
 
-            status.commands.forEach(element => {
+            var cmdDiv = d3.select("#agent_commands");
+            var $container = $("#agent_commands");
+            for (var count = 0; count < status.commands.length; count++) {
+                var element = status.commands[count];
+                cmdDiv.append("div")
+                    .attr('id', 'agent_command_' + cmdsCount)
+                    .text("id#" + element.agentId + " #:" + cmdsCount + " command:" + element.name)
                 console.log(element);
-            });
+                console.log(cmdsCount);
+
+                // see https://stackoverflow.com/questions/2905867/how-to-scroll-to-specific-item-using-jquery
+                var $scrollTo = $('#agent_command_' + cmdsCount);
+                $container.scrollTop(
+                    $scrollTo.offset().top - $container.offset().top + $container.scrollTop()
+                );
+                cmdsCount += 1;
+            };
             fetchRound(id, roundNum + 1);
         });
 }

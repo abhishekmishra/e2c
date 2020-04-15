@@ -135,13 +135,13 @@ namespace S2CCore
                         {
                             if (cmd is CleanCommand)
                             {
-                                (int rx, int cx) = cmd.GetLocation();
-                                sp.clean(a.id, rx, cx);
+                                Coords c = cmd.Location;
+                                sp.clean(a.id, c.Row, c.Column);
                             }
                             else if (cmd is MoveToComand)
                             {
-                                (int rx, int cx) = cmd.GetLocation();
-                                sp.moveAgent(a.id, rx, cx);
+                                Coords c = cmd.Location;
+                                sp.moveAgent(a.id, c.Row, c.Column);
                             }
                             cmd.Status = true;
                             cmd.FailureReason = null;

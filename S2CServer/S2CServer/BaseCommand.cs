@@ -9,8 +9,7 @@ namespace S2CCore
         public int AgentId { get; set; }
         public bool Status { get; set; }
         public string FailureReason { get; set; }
-
-        public abstract (int row, int col) GetLocation();
-        public abstract string GetName();
+        public string Name { get ; set ; }
+        public Coords Location { get ; set ; }
     }
 }

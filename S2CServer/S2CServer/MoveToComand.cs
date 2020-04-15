@@ -6,28 +6,16 @@ namespace S2CCore
 {
     public class MoveToComand: BaseCommand
     {
-        private int row, col;
-
         public MoveToComand(int agentId, int row, int col)
         {
+            Name = "moveto";
             AgentId = agentId;
-            this.row = row;
-            this.col = col;
-        }
-
-        public override (int row, int col) GetLocation()
-        {
-            return (row, col);
-        }
-
-        public override string GetName()
-        {
-            return "moveto";
+            Location = new Coords(row, col);
         }
 
         public override string ToString()
         {
-            return "Move To [" + row + ", " + col + "]";
+            return "Move To [" + Location.Row + ", " + Location.Column + "]";
         }
     }
 }

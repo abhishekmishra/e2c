@@ -8,9 +8,9 @@ namespace S2CCore
     {
         int AgentId { get; set; }
 
-        string GetName();
+        string Name { get; set; }
 
-        (int row, int col) GetLocation();
+        Coords Location { get; set; }
 
         bool Status { get; set; }
 

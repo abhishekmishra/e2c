@@ -6,28 +6,16 @@ namespace S2CCore
 {
     public class CleanCommand : BaseCommand
     {
-        private int row, col;
-
         public CleanCommand(int agentId, int row, int col)
         {
+            Name = "clean";
             AgentId = agentId;
-            this.row = row;
-            this.col = col;
-        }
-
-        public override (int row, int col) GetLocation()
-        {
-            return (row, col);
-        }
-
-        public override string GetName()
-        {
-            return "clean";
+            Location = new Coords(row, col);
         }
 
         public override string ToString()
         {
-            return "Clean [" + row + ", " + col + "]";
+            return "Clean [" + Location.Row + ", " + Location.Column + "]";
         }
     }
 }
