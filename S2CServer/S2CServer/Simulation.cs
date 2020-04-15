@@ -244,7 +244,11 @@ namespace S2CCore
                         ""params"": {}
                     },
                     {
-                        ""type"": ""simple"",
+                        ""type"": ""simple.bound"",
+                        ""params"": {}
+                    },
+                    {
+                        ""type"": ""simple.bound"",
                         ""params"": {}
                     },
                 ]

@@ -11,7 +11,8 @@ namespace S2CCore
         private static readonly Dictionary<string, Type> _AgentTypes
             = new Dictionary<string, Type>()
             {
-                { "simple", _CurrentAssembly.GetType("S2CCore.SimpleCleaningAgent") }
+                { "simple", _CurrentAssembly.GetType("S2CCore.SimpleCleaningAgent") },
+                { "simple.bound", _CurrentAssembly.GetType("S2CCore.SimpleBoundCheckAgent") }
             };
 
 

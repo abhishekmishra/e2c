@@ -4,14 +4,9 @@ using System.Text;
 
 namespace S2CCore
 {
-    public enum Direction
+    public class SimpleBoundCheckAgent : SimpleAgentBase
     {
-        N = 0, E, W, S
-    }
-
-    public class SimpleCleaningAgent : SimpleAgentBase
-    {
-        public SimpleCleaningAgent(Dictionary<string, string> args) : base(args)
+        public SimpleBoundCheckAgent(Dictionary<string, string> args) : base(args)
         {
             //do nothing
         }
@@ -24,7 +19,12 @@ namespace S2CCore
             }
             else
             {
-                (int r, int c) = NewLocation(location);
+                int r, c;
+                do
+                {
+                    (r, c) = NewLocation(location);
+                } while (r < 0 || r >= SpaceSize.Row
+                        || c < 0 || c >= SpaceSize.Column);
                 return new MoveToComand(AgentId, r, c);
             }
         }
