@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using YamlDotNet.RepresentationModel;
@@ -59,26 +60,27 @@ namespace S2CCore
 
             // Create agents as per configuration
             // and drop them into the space
-            agents = new List<ICleaningAgent>();
-            int agentId = 0;
-            int r = 0, c = 0;
-            for (int i = 0; i < 10; i++)
+            agents = AgentFactory.CreateAgents(SimulationConfig.Agents);
+            foreach (var a in agents)
             {
-                try
+                int agentId = 0;
+                int r = 0, c = 0;
+                for (int i = 0; i < 10; i++)
                 {
-                    agentId = sp.initAgent(i, i);
-                    r = c = i;
-                    var a = new SimpleCleaningAgent();
-                    agents.Add(a);
-                    a.AgentId = agentId;
-                    a.SpaceSize = new Coords(SimulationConfig.Space.Rows, SimulationConfig.Space.Columns);
+                    try
+                    {
+                        agentId = sp.initAgent(i, i);
+                        r = c = i;
+                        a.AgentId = agentId;
+                        a.SpaceSize = new Coords(SimulationConfig.Space.Rows, SimulationConfig.Space.Columns);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                        continue;
+                    }
+                    break;
                 }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                    continue;
-                }
-                break;
             }
         }
 
@@ -193,28 +195,67 @@ namespace S2CCore
             _Init();
         }
 
+        //private void LoadConfig()
+        //{
+        //    json
+        //    // Setup the input
+        //    var input = new StringReader(Document);
+
+        //    var deserializer = new DeserializerBuilder()
+        //        .WithNamingConvention(CamelCaseNamingConvention.Instance)
+        //        .Build();
+
+        //    SimulationConfig = deserializer.Deserialize<SimConfig>(input);
+        //}
+
+        //        private const string Document = @"---
+        //            space:
+        //                rows: 4
+        //                columns: 4
+        //                dirtProbability: 0.3
+        //                wallProbability: 0.2
+
+        //            agents:
+        //                - type: simple
+        //...";
+
         private void LoadConfig()
         {
-            // Setup the input
-            var input = new StringReader(Document);
+            var options = new JsonSerializerOptions
+            {
+                AllowTrailingCommas = true,
+                PropertyNameCaseInsensitive = true
+            };
 
-            var deserializer = new DeserializerBuilder()
-                .WithNamingConvention(CamelCaseNamingConvention.Instance)
-                .Build();
-
-            SimulationConfig = deserializer.Deserialize<SimConfig>(input);
+            SimulationConfig = JsonSerializer.Deserialize<SimConfig>(Document, options);
         }
 
-        private const string Document = @"---
-            space:
-                rows: 4
-                columns: 4
-                dirtProbability: 0.3
-                wallProbability: 0.2
-
-            agents:
-                - type: simple
-...";
+        private const string Document = @"
+            {
+                ""space"": {
+                    ""rows"": 10,
+                    ""columns"": 20,
+                    ""dirtProbability"": 0.3,
+                    ""wallProbability"": 0.1
+                },
+                ""agents"": [
+                    {
+                        ""type"": ""simple"",
+                        ""params"": {}
+                    },
+                    {
+                        ""type"": ""simple"",
+                        ""params"": {}
+                    },
+                ]
+            }
+        ";
+        //{
+        //    ""type"": ""simple-bound-check"",
+        //    ""params"": {
+        //        ""blah"": ""bluh""
+        //    }
+        //}
     }
 
     public class SimConfig
@@ -234,5 +275,6 @@ namespace S2CCore
     public class AgentConfig
     {
         public string Type { get; set; }
+        public Dictionary<string, string> Params { get; set; }
     }
 }

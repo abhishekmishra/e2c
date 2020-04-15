@@ -19,7 +19,7 @@ namespace S2CCore
         public int AgentId { get; set; }
         public Coords SpaceSize { get; set; }
 
-        public SimpleCleaningAgent()
+        public SimpleCleaningAgent(Dictionary<string, string> args)
         {
             // do nothing
         }
