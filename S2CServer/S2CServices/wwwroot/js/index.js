@@ -34,16 +34,14 @@ $("#configModalSave").click((e) => {
 function abort_sim() {
     cmdsCount = 0;
     $("#agent_commands").html("");
-    fetch('/simulation/' + currentSimId + '/abort', {
-        method: 'POST', // or 'PUT'
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(simConfig)
-    })
+    fetch('/simulation/' + currentSimId + '/abort')
         .then((response) => {
             return response.text();
         })
+        .then((data) => {
+            console.log("Aborted sim " + currentSimId + " " + data);
+        });
+}
 
 
 function new_sim() {
@@ -152,8 +150,8 @@ function fetchRound(id, roundNum) {
                 cmdDiv.append("div")
                     .attr('id', 'agent_command_' + cmdsCount)
                     .text("id#" + element.agentId + " #:" + cmdsCount + " command:" + element.name)
-                console.log(element);
-                console.log(cmdsCount);
+                //console.log(element);
+                //console.log(cmdsCount);
 
                 // see https://stackoverflow.com/questions/2905867/how-to-scroll-to-specific-item-using-jquery
                 var $scrollTo = $('#agent_command_' + cmdsCount);
