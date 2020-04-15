@@ -16,9 +16,12 @@ namespace S2CServices
         private Dictionary<int, Matrix<double>> spaceHist;
         private Dictionary<int, Matrix<double>> agentSpaceHist;
 
+        public bool SimAborted { get; set; }
+
         public WebSimulationViewer()
         {
             Init();
+            SimAborted = false;
         }
 
         private void Init()
@@ -97,6 +100,11 @@ namespace S2CServices
             {
                 return null;
             }
+        }
+
+        public void Aborted()
+        {
+            SimAborted = true;
         }
     }
 }

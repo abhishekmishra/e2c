@@ -8,6 +8,11 @@ namespace S2CCore
 {
     public class ConsoleSimulationViewer : ISimulationViewer
     {
+        public void Aborted()
+        {
+            Console.WriteLine("Simulation Aborted");
+        }
+
         public void CommandExecuted(IAgentCommand command)
         {
             Console.WriteLine("Agent {0} command {1} done.", command.AgentId, command);

@@ -16,5 +16,7 @@ namespace S2CCore
         void CommandExecuted(IAgentCommand command);
 
         void CommandFailed(IAgentCommand command);
+
+        void Aborted();
     }
 }

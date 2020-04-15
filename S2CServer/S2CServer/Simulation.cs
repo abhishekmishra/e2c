@@ -11,7 +11,7 @@ namespace S2CCore
 {
     public enum SimState
     {
-        STOPPED = 0, RUNNING, STOPPING
+        STOPPED = 0, RUNNING, ABORTED
     }
 
     /**
@@ -30,6 +30,7 @@ namespace S2CCore
         private Space sp;
         private List<ICleaningAgent> agents;
         public SimState State { get; private set; }
+        public bool Abort { get; set; }
 
         public Simulation()
         {
@@ -48,6 +49,7 @@ namespace S2CCore
 
         private void _Init()
         {
+            Abort = false;
             State = SimState.STOPPED;
 
             // Create a Cleaning Space as per configuration
@@ -123,6 +125,13 @@ namespace S2CCore
                 int round = 1;
                 while (sp.hasDirty())
                 {
+                    if(Abort)
+                    {
+                        Abort = false;
+                        State = SimState.ABORTED;
+                        break;
+                    }
+
                     view.NewRound(round);
                     foreach (var a in agents)
                     {

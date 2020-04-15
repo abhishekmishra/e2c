@@ -96,5 +96,16 @@ namespace S2CServices
             }
             _simsMutex.ReleaseMutex();
         }
+
+        public void AbortSim(int count)
+        {
+            _simsMutex.WaitOne();
+            if (count <= _count)
+            {
+                var s = _sims[count];
+                s.Abort = true;
+            }
+            _simsMutex.ReleaseMutex();
+        }
     }
 }

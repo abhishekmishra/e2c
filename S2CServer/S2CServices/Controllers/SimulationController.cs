@@ -53,6 +53,12 @@ namespace S2CServices.Controllers
             }
         }
 
+        [HttpGet("{id}/abort")]
+        public void Abort(int id)
+        {
+            _mgr.AbortSim(id);
+        }
+
         [HttpGet("{id}/roundnum")]
         public int GetCurrentRoundNum(int id)
         {

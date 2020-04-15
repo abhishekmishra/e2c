@@ -1,4 +1,6 @@
-﻿var simConfig = {
+﻿var currentSimId;
+
+var simConfig = {
     space: {
         rows: 10,
         columns: 20,
@@ -29,6 +31,21 @@ $("#configModalSave").click((e) => {
     $("#configModal").modal("toggle");
 });
 
+function abort_sim() {
+    cmdsCount = 0;
+    $("#agent_commands").html("");
+    fetch('/simulation/' + currentSimId + '/abort', {
+        method: 'POST', // or 'PUT'
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(simConfig)
+    })
+        .then((response) => {
+            return response.text();
+        })
+
+
 function new_sim() {
     cmdsCount = 0;
     $("#agent_commands").html("");
@@ -44,6 +61,7 @@ function new_sim() {
         })
         .then((data) => {
             var id = data;
+            currentSimId = id;
             $("sim_id").val(id);
             fetch('/simulation/' + id + '/start')
                 .then((response) => {
