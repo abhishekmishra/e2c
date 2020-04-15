@@ -3,13 +3,11 @@ namespace S2CCore
 {
     public interface ICleaningAgent
     {
-        public int id { get; set; }
+        public int AgentId { get; set; }
 
-        void SetLocation(int row, int col);
+        public Coords SpaceSize { get; set; }
 
-        void SetLocationDirty(bool isDirty);
-
-        IAgentCommand GetCommand();
+        IAgentCommand NextCommand(Coords location, bool isDirty);
 
         void CommandResult(bool success, string failureReason);
     }

@@ -70,8 +70,8 @@ namespace S2CCore
                     r = c = i;
                     var a = new SimpleCleaningAgent();
                     agents.Add(a);
-                    a.SetLocation(r, c);
-                    a.id = agentId;
+                    a.AgentId = agentId;
+                    a.SpaceSize = new Coords(SimulationConfig.Space.Rows, SimulationConfig.Space.Columns);
                 }
                 catch (Exception e)
                 {
@@ -135,22 +135,20 @@ namespace S2CCore
                     view.NewRound(round);
                     foreach (var a in agents)
                     {
-                        (int row, int col) = sp.whereAmI(a.id);
+                        (int row, int col) = sp.whereAmI(a.AgentId);
                         bool dirty = sp.isDirty(row, col);
-                        a.SetLocation(row, col);
-                        a.SetLocationDirty(dirty);
-                        var cmd = a.GetCommand();
+                        var cmd = a.NextCommand(new Coords(row, col), dirty);
                         try
                         {
                             if (cmd is CleanCommand)
                             {
                                 Coords c = cmd.Location;
-                                sp.clean(a.id, c.Row, c.Column);
+                                sp.clean(a.AgentId, c.Row, c.Column);
                             }
                             else if (cmd is MoveToComand)
                             {
                                 Coords c = cmd.Location;
-                                sp.moveAgent(a.id, c.Row, c.Column);
+                                sp.moveAgent(a.AgentId, c.Row, c.Column);
                             }
                             cmd.Status = true;
                             cmd.FailureReason = null;
@@ -165,7 +163,6 @@ namespace S2CCore
                             view.CommandFailed(cmd);
                         }
                     }
-                    //Console.WriteLine();
                     view.ShowState(sp.space, sp.agentSpace);
                     round += 1;
                 }

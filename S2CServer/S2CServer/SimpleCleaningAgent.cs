@@ -11,16 +11,13 @@ namespace S2CCore
 
     public class SimpleCleaningAgent : ICleaningAgent
     {
-        int row, col;
-        bool isDirty = false;
-
-        // IAgentCommand lastCommand;
         bool commandSuccessful = true;
         string commandFailureReason;
         Direction direction = Direction.E;
         Random rnd = new Random();
 
-        public int id { get; set; }
+        public int AgentId { get; set; }
+        public Coords SpaceSize { get; set; }
 
         public SimpleCleaningAgent()
         {
@@ -33,58 +30,48 @@ namespace S2CCore
             commandFailureReason = failureReason;
         }
 
-        (int r, int c) NewLocation()
+        (int r, int c) NewLocation(Coords l)
         {
             if (direction == Direction.E)
             {
-                return (row, col + 1);
+                return (l.Row, l.Column + 1);
             }
             else if (direction == Direction.W)
             {
-                return (row, col - 1);
+                return (l.Row, l.Column - 1);
             }
             else if (direction == Direction.N)
             {
-                return (row - 1, col);
+                return (l.Row - 1, l.Column);
             }
             else if (direction == Direction.S)
             {
-                return (row + 1, col);
+                return (l.Row + 1, l.Column);
             }
-            return (row, col);
+            return (l.Row, l.Column);
         }
 
-        public IAgentCommand GetCommand()
+        public IAgentCommand NextCommand(Coords location, bool isDirty)
         {
-            if(isDirty)
+            if (isDirty)
             {
-                return new CleanCommand(id, row, col);
-            } else
+                return new CleanCommand(AgentId, location.Row, location.Column);
+            }
+            else
             {
-                if(commandSuccessful)
+                if (commandSuccessful)
                 {
                     direction = (Direction)rnd.Next(0, 4);
-                    (int r, int c) = NewLocation();
-                    return new MoveToComand(id, r, c);
-                } 
+                    (int r, int c) = NewLocation(location);
+                    return new MoveToComand(AgentId, r, c);
+                }
                 else
                 {
                     direction = (Direction)rnd.Next(0, 4);
-                    (int r, int c) = NewLocation();
-                    return new MoveToComand(id, r, c);
+                    (int r, int c) = NewLocation(location);
+                    return new MoveToComand(AgentId, r, c);
                 }
             }
-        }
-
-        public void SetLocation(int row, int col)
-        {
-            this.row = row;
-            this.col = col;
-        }
-
-        public void SetLocationDirty(bool isDirty)
-        {
-            this.isDirty = isDirty;
         }
     }
 }
