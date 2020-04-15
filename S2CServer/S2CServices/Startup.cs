@@ -30,7 +30,7 @@ namespace S2CServices
 
             WebSimulationViewer simViewer = new WebSimulationViewer();
             Simulation simulation = new Simulation();
-            simulation.SetView(simViewer);
+            simulation.AddView(simViewer);
 
             services.AddSingleton<Simulation>(simulation);
             services.AddSingleton<WebSimulationViewer>(simViewer);

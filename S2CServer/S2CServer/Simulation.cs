@@ -26,7 +26,7 @@ namespace S2CCore
     {
 
         public SimConfig SimulationConfig { get; private set; }
-        private ISimulationViewer view;
+        private List<ISimulationViewer> Views = new List<ISimulationViewer>();
         private Space sp;
         private List<ICleaningAgent> agents;
         public SimState State { get; private set; }
@@ -82,19 +82,22 @@ namespace S2CCore
             }
         }
 
-        public void SetView(ISimulationViewer v)
+        public void AddView(ISimulationViewer v)
         {
-            view = v;
+            Views.Add(v);
         }
 
         private void _InitView()
         {
             // Setup a Console Simulation Viewer, if no View exists
-            if (view == null)
+            if (Views.Count == 0)
             {
-                view = new ConsoleSimulationViewer();
+                AddView(new ConsoleSimulationViewer());
             }
-            view.ShowState(0, new List<IAgentCommand>(), sp.space, sp.agentSpace);
+            foreach (var view in Views)
+            {
+                view.ShowState(0, new List<IAgentCommand>(), sp.space, sp.agentSpace);
+            }
         }
 
         public void Run()
@@ -122,6 +125,10 @@ namespace S2CCore
             State = SimState.RUNNING;
 
             _InitView();
+            foreach (var view in Views)
+            {
+                view.SimStarted(0, null);
+            }
 
             // Start Simulation
             // Each agent is allowed one command per round of lifecycle
@@ -170,9 +177,17 @@ namespace S2CCore
                             a.CommandResult(false, e.Message);
                         }
                     }
-                    view.ShowState(round, commands, sp.space, sp.agentSpace);
+                    foreach (var view in Views)
+                    {
+                        view.ShowState(round, commands, sp.space, sp.agentSpace);
+                    }
                     round += 1;
                 }
+            }
+
+            foreach (var view in Views)
+            {
+                view.SimComplete();
             }
 
             _Init();
