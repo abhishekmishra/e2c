@@ -9,8 +9,13 @@ var simConfig = {
     },
     agents: [
         {
-            type: "simple"
-        }
+            type: "simple",
+            params: {}
+        },
+        {
+            type: "simple.bound",
+            params: {}
+        },
     ]
 }
 
