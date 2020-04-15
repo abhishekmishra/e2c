@@ -1,7 +1,7 @@
 ﻿var simConfig = {
     space: {
-        rows: 5,
-        columns: 5,
+        rows: 10,
+        columns: 20,
         dirtProbability: 0.3,
         wallProbability: 0.1
     },
@@ -44,6 +44,7 @@ function new_sim() {
         })
         .then((data) => {
             var id = data;
+            $("sim_id").val(id);
             fetch('/simulation/' + id + '/start')
                 .then((response) => {
                     return response.text();
@@ -99,7 +100,7 @@ function fetchRound(id, roundNum) {
                     var fill = "orange";
                     //console.log(status.spaceArr[i][j]);
                     switch (status.spaceArr[i][j]) {
-                        case 0: fill = "red";
+                        case 0: fill = "whitesmoke";
                             break;
                         case 1: fill = "brown";
                             break;
@@ -110,8 +111,19 @@ function fetchRound(id, roundNum) {
                         .attr("x", j * rw)
                         .attr("y", i * rh)
                         .attr("width", rw)
-                        .attr("height", rw)
+                        .attr("height", rh)
                         .attr("fill", fill);
+
+                    if (status.agentSpaceArr[i][j] > 0) {
+                        var agentId = status.agentSpaceArr[i][j];
+                        svgCtr.append("text")
+                            .attr("x", (j + 0.5) * rw)
+                            .attr("y", (i + 1) * rh)
+                            .attr("fill", "black")
+                            .attr("text-anchor", "middle")
+                            .attr("font-size", rh + "px")
+                            .text(String.fromCharCode(64 + (agentId - 1)/2));
+                    }
                 }
             }
 
