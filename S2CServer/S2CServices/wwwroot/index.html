@@ -30,28 +30,11 @@
             <div class="col-4 bg-dark">
                 <div class="card">
                     <div class="card-header">
-                        Simulation #<span id="sim_id"></span>, Round #<span id="round_num"></span>
+                        Agent Scores @ Round #<span id="round_num"></span>
                     </div>
                     <div class="card-body">
                         <span class="card-title"></span>
-                        <table class="table table-borderless w-100">
-                            <tr>
-                                <td>Status: </td>
-                                <td><span id="simulation_status">N/A</span></td>
-                            </tr>
-                            <tr>
-                                <td>Dimensions: </td>
-                                <td><span id="dx">0</span>X<span id="dy">0</span></td>
-                            </tr>
-                            <tr>
-                                <td>Probability of Dirt: </td>
-                                <td><span id="prob_dirt">0</span></td>
-                            </tr>
-                            <tr>
-                                <td>Probability of Wall: </td>
-                                <td><span id="prob_wall">0</span></td>
-                            </tr>
-                        </table>
+                        <div id="score_table"></div>
                     </div>
                 </div>
                 <div class="card">
