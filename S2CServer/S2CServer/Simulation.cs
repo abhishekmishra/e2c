@@ -119,7 +119,7 @@ namespace S2CCore
             {
                 view.ShowState(round, new List<IAgentCommand>(), space.space, space.agentSpace);
             }
-
+            PublishStats(round);
             foreach (var view in Views)
             {
                 view.SimStarted(0, null);
@@ -176,6 +176,7 @@ namespace S2CCore
                     {
                         view.ShowState(round, commands, space.space, space.agentSpace);
                     }
+                    PublishStats(round);
                     round += 1;
                 }
             }
@@ -207,6 +208,11 @@ namespace S2CCore
         public void DeregisterListener(IStatsListener statsListener)
         {
             statsPublisher.DeregisterListener(statsListener);
+        }
+
+        public void PublishStats(int round)
+        {
+            statsPublisher.PublishStats(round);
         }
 
         private const string Document = @"

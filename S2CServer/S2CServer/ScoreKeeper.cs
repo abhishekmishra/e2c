@@ -104,14 +104,6 @@ namespace S2CCore
                 astats.Efficiency = Math.Round(
                     (astats.CleanSuccess * 100.0) / astats.Commands, 2);
             }
-
-            if (simRound > 0)
-            {
-                foreach (var listener in StatsListeners)
-                {
-                    listener.GetStats(SpaceStats, AgentStats);
-                }
-            }
         }
 
         public void SimAborted()
@@ -142,6 +134,14 @@ namespace S2CCore
             if (StatsListeners.Contains(statsListener))
             {
                 StatsListeners.Remove(statsListener);
+            }
+        }
+
+        public void PublishStats(int round)
+        {
+            foreach (var listener in StatsListeners)
+            {
+                listener.GetStats(round, SpaceStats, AgentStats);
             }
         }
     }

@@ -9,5 +9,7 @@ namespace S2CCore
         void RegisterListener(IStatsListener statsListener);
 
         void DeregisterListener(IStatsListener statsListener);
+
+        void PublishStats(int round);
     }
 }

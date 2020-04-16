@@ -6,6 +6,7 @@ namespace S2CCore
 {
     public interface IStatsListener
     {
-        void GetStats(SpaceStatistics spaceStatistics, Dictionary<int, AgentStatistics> agentStatistics);
+        void GetStats(int round, 
+            SpaceStatistics spaceStatistics, Dictionary<int, AgentStatistics> agentStatistics);
     }
 }

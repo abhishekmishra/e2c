@@ -113,12 +113,12 @@ namespace S2CServices
             }
         }
 
-        public void GetStats(SpaceStatistics spaceStatistics,
+        public void GetStats(int round, SpaceStatistics spaceStatistics,
             Dictionary<int, AgentStatistics> agentStatistics)
         {
-            SpaceStatistics.Add(CurrentRound, spaceStatistics);
+            SpaceStatistics.Add(round, spaceStatistics);
             var s = new List<AgentStatistics>(agentStatistics.Values);
-            AgentStatistics.Add(CurrentRound, s);
+            AgentStatistics.Add(round, s);
         }
     }
 }

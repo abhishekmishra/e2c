@@ -48,7 +48,7 @@ function abort_sim() {
         });
 }
 
-function tabulateScores(data, columns) {
+function tabulateScores(data, columns, colnames) {
     $("#score_table").html("");
     var table = d3.select('#score_table').append('table')
         .attr("class", "table table-dark");
@@ -58,7 +58,7 @@ function tabulateScores(data, columns) {
     // append the header row
     thead.append('tr')
         .selectAll('th')
-        .data(columns).enter()
+        .data(colnames).enter()
         .append('th')
         .text(function (column) { return column; });
 
@@ -137,7 +137,6 @@ function fetchRound(id, roundNum) {
             var status = JSON.parse(statusText);
             //console.log(status);
             d3.select("#round_num").text(status.roundNum);
-            tabulateScores(status.agentStatistics, ["agentId", "clean", "moves", "efficiency", "errorRate"]);
             d3.select("#sim").html("");
 
             var w = 400, h = 400;
@@ -200,6 +199,9 @@ function fetchRound(id, roundNum) {
                 );
                 cmdsCount += 1;
             };
+            tabulateScores(status.agentStatistics,
+                ["agentId", "clean", "moves", "efficiency", "errorRate"],
+                ["#", "Clean", "Move", "Eff %", "Err %"]);
             fetchRound(id, roundNum + 1);
         });
 }
