@@ -6,7 +6,8 @@ namespace S2CCore
 {
     public enum SimulationErrorCode
     {
-        SIM_ERR_UNKNOWN = 0,
+        SIM_ERR_SUCCESS = 0,
+        SIM_ERR_UNKNOWN,
         SIM_ERR_AGENT_DOES_NOT_EXIST,
         SIM_ERR_LOCATION_NOT_ADJACENT,
         SIM_ERR_MOVE_TO_WALL,

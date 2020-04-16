@@ -8,6 +8,7 @@ namespace S2CCore
     {
         protected bool commandSuccessful = true;
         protected string commandFailureReason;
+        protected SimulationErrorCode errorCode;
         protected Direction direction = Direction.E;
         protected Random rnd = new Random();
         Dictionary<string, string> args;
@@ -21,10 +22,11 @@ namespace S2CCore
 
         public Coords SpaceSize { get; set; }
 
-        public void CommandResult(bool success, string failureReason)
+        public void CommandResult(bool success, string failureReason, SimulationErrorCode errCode)
         {
             commandSuccessful = success;
             commandFailureReason = failureReason;
+            errorCode = errCode;
         }
 
         protected (int r, int c) NewLocation(Coords l)
