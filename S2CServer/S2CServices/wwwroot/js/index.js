@@ -106,7 +106,6 @@ function new_sim() {
                 })
                 .then((data) => {
                     d3.select("#simulation_status").text(data);
-                    //console.log(data);
                     if (data == "started") {
                         fetchRound(id, 0);
                     }
@@ -130,12 +129,10 @@ function fetchRound(id, roundNum) {
             return response.text();
         })
         .then((statusText) => {
-            //console.log(statusText);
             if (statusText == "") {
                 return null;
             }
             var status = JSON.parse(statusText);
-            //console.log(status);
             d3.select("#round_num").text(status.roundNum);
             d3.select("#sim").html("");
 
@@ -151,6 +148,8 @@ function fetchRound(id, roundNum) {
             var rw = w / cols;
             var rh = h / rows;
 
+            // see https://stackoverflow.com/questions/46629188/multidimensional-array-for-d3
+            // for explanation of this section
             var local = d3.local();
 
             var rects = svgCtr.append("g")
@@ -200,39 +199,6 @@ function fetchRound(id, roundNum) {
                     }
                 });
 
-            console.log(texts);
-            //for (var i = 0; i < rows; i++) {
-            //    for (var j = 0; j < cols; j++) {
-            //        //        var fill = "orange";
-            //        //        //console.log(status.spaceArr[i][j]);
-            //        //        switch (status.spaceArr[i][j]) {
-            //        //            case 0: fill = "whitesmoke";
-            //        //                break;
-            //        //            case 1: fill = "brown";
-            //        //                break;
-            //        //            case 2: fill = "grey";
-            //        //                break;
-            //        //        }
-            //        //        svgCtr.append("rect")
-            //        //            .attr("x", j * rw)
-            //        //            .attr("y", i * rh)
-            //        //            .attr("width", rw)
-            //        //            .attr("height", rh)
-            //        //            .attr("fill", fill);
-
-            //        if (status.agentSpaceArr[i][j] > 0) {
-            //            var agentId = status.agentSpaceArr[i][j];
-            //            rects = rects.append("text")
-            //                .attr("x", function (d, i, j) { return (j + 0.5) * rw })
-            //                .attr("y", function (d, i, j) { return (i + 1) * rh })
-            //                .attr("fill", function (d, i, j) { return "black" })
-            //                .attr("text-anchor", function (d, i, j) { return "middle" })
-            //                .attr("font-size", function (d, i, j) { return rh + "px" })
-            //                .text(String.fromCharCode(64 + (agentId - 1) / 2));
-            //        }
-            //    }
-            //}
-
             var cmdDiv = d3.select("#agent_commands");
             var $container = $("#agent_commands");
             for (var count = 0; count < status.commands.length; count++) {
@@ -240,8 +206,6 @@ function fetchRound(id, roundNum) {
                 cmdDiv.append("div")
                     .attr('id', 'agent_command_' + cmdsCount)
                     .text("id#" + element.agentId + " #:" + cmdsCount + " command:" + element.name)
-                //console.log(element);
-                //console.log(cmdsCount);
 
                 // see https://stackoverflow.com/questions/2905867/how-to-scroll-to-specific-item-using-jquery
                 var $scrollTo = $('#agent_command_' + cmdsCount);
