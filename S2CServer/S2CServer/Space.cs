@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 
@@ -29,6 +30,7 @@ namespace S2CCore
         public Matrix<Double> agentSpace { get; private set; }
         private int rows, columns;
         private double wallP, dirtyP;
+        private Random rnd = new Random();
 
         private Dictionary<int, AgentState> agents;
 
@@ -43,20 +45,19 @@ namespace S2CCore
             agentSpace.Clear();
 
             agents = new Dictionary<int, AgentState>();
-            createEmptySpace(rows, columns);
-            randomWall();
-            randomDirty();
+            CreateEmptySpace(rows, columns);
+            RandomWall();
+            RandomDirty();
         }
 
-        public void createEmptySpace(int rows, int columns)
+        public void CreateEmptySpace(int rows, int columns)
         {
             space = Matrix<Double>.Build.Dense(rows, columns);
             space.Clear();
         }
 
-        public void randomWall()
+        public void RandomWall()
         {
-            Random rnd = new Random();
             for (int i = 0; i < space.RowCount; i++)
             {
                 for (int j = 0; j < space.ColumnCount; j++)
@@ -70,9 +71,8 @@ namespace S2CCore
             }
         }
 
-        public void randomDirty()
+        public void RandomDirty()
         {
-            Random rnd = new Random();
             for (int i = 0; i < space.RowCount; i++)
             {
                 for (int j = 0; j < space.ColumnCount; j++)
@@ -90,22 +90,37 @@ namespace S2CCore
         }
 
         // commands for agents
-        public int query(int row, int col)
+        public int Query(int row, int col)
         {
             return (int)space[row, col];
         }
 
-        public bool isDirty(int row, int col)
+        public bool IsDirty(int row, int col)
         {
-            return query(row, col) == DIRTY;
+            return Query(row, col) == DIRTY;
         }
 
-        public bool isClean(int row, int col)
+        public bool IsWall(int row, int col)
         {
-            return !isDirty(row, col);
+            return Query(row, col) == WALL;
         }
 
-        public bool canPlaceAgent(int row, int col)
+        public bool HasAgent(int row, int col)
+        {
+            var val = Query(row, col);
+            if (val > 2 && val % 2 == 1)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool IsClean(int row, int col)
+        {
+            return !IsDirty(row, col);
+        }
+
+        public bool CanPlaceAgent(int row, int col)
         {
             if (space[row, col] == NODATA || space[row, col] == DIRTY)
             {
@@ -114,7 +129,7 @@ namespace S2CCore
             return false;
         }
 
-        public (int row, int col) whereAmI(int agentId)
+        public (int row, int col) WhereAmI(int agentId)
         {
             AgentState a = agents[agentId];
             if (a != null)
@@ -124,33 +139,40 @@ namespace S2CCore
             return (-1, -1);
         }
 
-        public int initAgent(int row, int col)
+        public int InitAgent()
         {
-            if (canPlaceAgent(row, col))
+            int countTries = 0;
+
+            while (countTries < 10)
             {
-                int agentId = -1;
-                if (agents.Keys.Count == 0)
+                int row = rnd.Next(0, rows);
+                int col = rnd.Next(0, columns);
+
+                if (CanPlaceAgent(row, col))
                 {
-                    agentId = 3;
+                    int agentId = -1;
+                    if (agents.Keys.Count == 0)
+                    {
+                        agentId = 3;
+                    }
+                    else
+                    {
+                        agentId = agents.Keys.Max() + 2;
+                    }
+                    Console.WriteLine("Added agentId " + agentId);
+                    agents.Add(agentId, new AgentState(agentId, row, col));
+                    agentSpace[row, col] = agentId;
+                    return agentId;
                 }
-                else
-                {
-                    agentId = agents.Keys.Max() + 2;
-                }
-                Console.WriteLine("Added agentId " + agentId);
-                agents.Add(agentId, new AgentState(agentId, row, col));
-                agentSpace[row, col] = agentId;
-                return agentId;
+                countTries += 1;
             }
-            else
-            {
-                throw new ArgumentException("Cannot place an agent at the given row column [" + row + ", " + col + "]");
-            }
+            throw new SimulationException("Cannot place the next agent. No suitable location found.",
+                SimulationErrorCode.SIM_ERR_UNKNOWN, null);
         }
 
-        public void moveAgent(int agentId, int trow, int tcol)
+        public void MoveAgent(int agentId, int trow, int tcol)
         {
-            checkRange(trow, tcol);
+            CheckRange(trow, tcol);
             AgentState a = agents[agentId];
             if (a != null)
             {
@@ -166,54 +188,61 @@ namespace S2CCore
                         }
                         else
                         {
-                            throw new ArgumentException("There is already an agent there!");
+                            throw new SimulationException("There is already an agent there!",
+                                SimulationErrorCode.SIM_ERR_AGENT_COLLISION, new Coords(trow, tcol));
                         }
                     }
                     else
                     {
-                        throw new ArgumentException("Cannot move into a WALL!");
+                        throw new SimulationException("Cannot move into a WALL!",
+                                SimulationErrorCode.SIM_ERR_MOVE_TO_WALL, new Coords(trow, tcol));
                     }
                 }
                 else
                 {
-                    throw new ArgumentException("New location is not adjacent!");
+                    throw new SimulationException("New location is not adjacent!",
+                                SimulationErrorCode.SIM_ERR_LOCATION_NOT_ADJACENT, new Coords(trow, tcol));
                 }
             }
             else
             {
-                throw new ArgumentException("Agent does not exist!");
+                throw new SimulationException("Agent does not exist!",
+                                SimulationErrorCode.SIM_ERR_NO_SUCH_AGENT, new Coords(trow, tcol));
             }
         }
 
-        public void clean(int agentId, int row, int col)
+        public void Clean(int agentId, int row, int col)
         {
-            checkRange(row, col);
+            CheckRange(row, col);
             var agent = agents[agentId];
             if (agent != null)
             {
                 if (agent.row == row && agent.col == col)
                 {
-                    if (isDirty(row, col))
+                    if (IsDirty(row, col))
                     {
                         space[row, col] = NODATA;
                     }
                     else
                     {
-                        throw new ArgumentException("Location is not dirty!");
+                        throw new SimulationException("Location is not dirty!",
+                                SimulationErrorCode.SIM_ERR_LOCATION_NOT_DIRTY, new Coords(row, col));
                     }
                 }
                 else
                 {
-                    throw new ArgumentException("Agent is not at the location to clean!");
+                    throw new SimulationException("Agent is not at the location to clean!",
+                                SimulationErrorCode.SIM_ERR_AGENT_NOT_AT_LOCATION, new Coords(row, col));
                 }
             }
             else
             {
-                throw new ArgumentException("Agent does not exist!");
+                throw new SimulationException("Agent does not exist!",
+                                SimulationErrorCode.SIM_ERR_NO_SUCH_AGENT, new Coords(row, col));
             }
         }
 
-        public int totalDirty()
+        public int TotalDirty()
         {
             int count = 0;
             for (int i = 0; i < rows; i++)
@@ -229,21 +258,21 @@ namespace S2CCore
             return count;
         }
 
-        public bool hasDirty()
+        public bool HasDirty()
         {
-            return totalDirty() > 0;
+            return TotalDirty() > 0;
         }
 
-        public void checkRange(int row, int col)
+        public void CheckRange(int row, int col)
         {
             if (row < 0 || row >= this.rows || col < 0 || col >= this.columns)
             {
-                throw new ArgumentException("Row/column is out of range: "
-                    + coordsToString(row, col));
+                throw new SimulationException("Row/column is out of range: " + CoordsToString(row, col),
+                                SimulationErrorCode.SIM_ERR_OUT_OF_RANGE, new Coords(row, col));
             }
         }
 
-        public static String coordsToString(int row, int col)
+        public static String CoordsToString(int row, int col)
         {
             return "[" + row + ", " + col + "]";
         }

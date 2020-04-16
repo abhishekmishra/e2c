@@ -64,23 +64,9 @@ namespace S2CCore
             foreach (var a in agents)
             {
                 int agentId = 0;
-                int r = 0, c = 0;
-                for (int i = 0; i < 10; i++)
-                {
-                    try
-                    {
-                        agentId = sp.initAgent(i, i);
-                        r = c = i;
-                        a.AgentId = agentId;
-                        a.SpaceSize = new Coords(SimulationConfig.Space.Rows, SimulationConfig.Space.Columns);
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e.Message);
-                        continue;
-                    }
-                    break;
-                }
+                agentId = sp.InitAgent();
+                a.AgentId = agentId;
+                a.SpaceSize = new Coords(SimulationConfig.Space.Rows, SimulationConfig.Space.Columns);
             }
         }
 
@@ -139,9 +125,9 @@ namespace S2CCore
             if (agents.Count > 0)
             {
                 int round = 1;
-                while (sp.hasDirty())
+                while (sp.HasDirty())
                 {
-                    if(Abort)
+                    if (Abort)
                     {
                         Abort = false;
                         State = SimState.ABORTED;
@@ -151,20 +137,20 @@ namespace S2CCore
                     List<IAgentCommand> commands = new List<IAgentCommand>();
                     foreach (var a in agents)
                     {
-                        (int row, int col) = sp.whereAmI(a.AgentId);
-                        bool dirty = sp.isDirty(row, col);
+                        (int row, int col) = sp.WhereAmI(a.AgentId);
+                        bool dirty = sp.IsDirty(row, col);
                         var cmd = a.NextCommand(new Coords(row, col), dirty);
                         try
                         {
                             if (cmd is CleanCommand)
                             {
                                 Coords c = cmd.Location;
-                                sp.clean(a.AgentId, c.Row, c.Column);
+                                sp.Clean(a.AgentId, c.Row, c.Column);
                             }
                             else if (cmd is MoveToComand)
                             {
                                 Coords c = cmd.Location;
-                                sp.moveAgent(a.AgentId, c.Row, c.Column);
+                                sp.MoveAgent(a.AgentId, c.Row, c.Column);
                             }
                             cmd.Status = true;
                             cmd.FailureReason = null;
