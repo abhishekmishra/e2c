@@ -3,7 +3,7 @@
 var simConfig = {
     space: {
         rows: 10,
-        columns: 20,
+        columns: 10,
         dirtProbability: 0.3,
         wallProbability: 0.1
     },
@@ -150,55 +150,106 @@ function fetchRound(id, roundNum) {
 
             var rw = w / cols;
             var rh = h / rows;
-            for (var i = 0; i < rows; i++) {
-                for (var j = 0; j < cols; j++) {
-                    var fill = "orange";
-                    //console.log(status.spaceArr[i][j]);
-                    switch (status.spaceArr[i][j]) {
-                        case 0: fill = "whitesmoke";
-                            break;
-                        case 1: fill = "brown";
-                            break;
-                        case 2: fill = "grey";
-                            break;
+
+            var local = d3.local();
+
+            var rects = svgCtr.append("g")
+                .selectAll("g")
+                .data(status.spaceArr)
+                .enter()
+                .append("g") //removing
+                .selectAll("rect")
+                .data(function (d, i, j) {
+                    local.set(this, i);
+                    return d;
+                })
+                .enter()
+                .append("rect")
+                .attr("x", function (d, i, j) { return i * rw })
+                .attr("y", function (d, i, j) { return local.get(this) * rh; })
+                .attr("width", function (d, i, j) { return rw })
+                .attr("height", function (d, i, j) { return rh })
+                .attr("fill", function (d, i, j) {
+                    if (d == 0) return "whitesmoke";
+                    if (d == 1) return "brown";
+                    if (d == 2) return "grey";
+                });
+
+            var texts = svgCtr.append("g")
+                .selectAll("g")
+                .data(status.agentSpaceArr)
+                .enter()
+                .append("g") //removing
+                .selectAll("text")
+                .data(function (d, i, j) {
+                    local.set(this, i);
+                    return d;
+                })
+                .enter()
+                .append("text")
+                .attr("x", function (d, i, j) { return (i + 0.5) * rw })
+                .attr("y", function (d, i, j) { return (local.get(this) + 1) * rh; })
+                .attr("fill", function (d, i, j) { return "black" })
+                .attr("text-anchor", function (d, i, j) { return "middle" })
+                .attr("font-size", function (d, i, j) { return rh + "px" })
+                .text(function (d, i, j) {
+                    if (d == 0) {
+                        return '';
+                    } else {
+                        return String.fromCharCode(64 + (d - 1) / 2);
                     }
-                    svgCtr.append("rect")
-                        .attr("x", j * rw)
-                        .attr("y", i * rh)
-                        .attr("width", rw)
-                        .attr("height", rh)
-                        .attr("fill", fill);
+                });
 
-                    if (status.agentSpaceArr[i][j] > 0) {
-                        var agentId = status.agentSpaceArr[i][j];
-                        svgCtr.append("text")
-                            .attr("x", (j + 0.5) * rw)
-                            .attr("y", (i + 1) * rh)
-                            .attr("fill", "black")
-                            .attr("text-anchor", "middle")
-                            .attr("font-size", rh + "px")
-                            .text(String.fromCharCode(64 + (agentId - 1)/2));
-                    }
-                }
-            }
+            console.log(texts);
+            //for (var i = 0; i < rows; i++) {
+            //    for (var j = 0; j < cols; j++) {
+            //        //        var fill = "orange";
+            //        //        //console.log(status.spaceArr[i][j]);
+            //        //        switch (status.spaceArr[i][j]) {
+            //        //            case 0: fill = "whitesmoke";
+            //        //                break;
+            //        //            case 1: fill = "brown";
+            //        //                break;
+            //        //            case 2: fill = "grey";
+            //        //                break;
+            //        //        }
+            //        //        svgCtr.append("rect")
+            //        //            .attr("x", j * rw)
+            //        //            .attr("y", i * rh)
+            //        //            .attr("width", rw)
+            //        //            .attr("height", rh)
+            //        //            .attr("fill", fill);
 
-            var cmdDiv = d3.select("#agent_commands");
-            var $container = $("#agent_commands");
-            for (var count = 0; count < status.commands.length; count++) {
-                var element = status.commands[count];
-                cmdDiv.append("div")
-                    .attr('id', 'agent_command_' + cmdsCount)
-                    .text("id#" + element.agentId + " #:" + cmdsCount + " command:" + element.name)
-                //console.log(element);
-                //console.log(cmdsCount);
+            //        if (status.agentSpaceArr[i][j] > 0) {
+            //            var agentId = status.agentSpaceArr[i][j];
+            //            rects = rects.append("text")
+            //                .attr("x", function (d, i, j) { return (j + 0.5) * rw })
+            //                .attr("y", function (d, i, j) { return (i + 1) * rh })
+            //                .attr("fill", function (d, i, j) { return "black" })
+            //                .attr("text-anchor", function (d, i, j) { return "middle" })
+            //                .attr("font-size", function (d, i, j) { return rh + "px" })
+            //                .text(String.fromCharCode(64 + (agentId - 1) / 2));
+            //        }
+            //    }
+            //}
 
-                // see https://stackoverflow.com/questions/2905867/how-to-scroll-to-specific-item-using-jquery
-                var $scrollTo = $('#agent_command_' + cmdsCount);
-                $container.scrollTop(
-                    $scrollTo.offset().top - $container.offset().top + $container.scrollTop()
-                );
-                cmdsCount += 1;
-            };
+            //var cmdDiv = d3.select("#agent_commands");
+            //var $container = $("#agent_commands");
+            //for (var count = 0; count < status.commands.length; count++) {
+            //    var element = status.commands[count];
+            //    cmdDiv.append("div")
+            //        .attr('id', 'agent_command_' + cmdsCount)
+            //        .text("id#" + element.agentId + " #:" + cmdsCount + " command:" + element.name)
+            //    //console.log(element);
+            //    //console.log(cmdsCount);
+
+            //    // see https://stackoverflow.com/questions/2905867/how-to-scroll-to-specific-item-using-jquery
+            //    var $scrollTo = $('#agent_command_' + cmdsCount);
+            //    $container.scrollTop(
+            //        $scrollTo.offset().top - $container.offset().top + $container.scrollTop()
+            //    );
+            //    cmdsCount += 1;
+            //};
             tabulateScores(status.agentStatistics,
                 ["agentId", "clean", "moves", "efficiency", "errorRate"],
                 ["#", "Clean", "Move", "Eff %", "Err %"]);
