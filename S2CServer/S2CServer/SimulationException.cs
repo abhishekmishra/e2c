@@ -14,7 +14,8 @@ namespace S2CCore
         SIM_ERR_LOCATION_NOT_DIRTY,
         SIM_ERR_AGENT_NOT_AT_LOCATION,
         SIM_ERR_NO_SUCH_AGENT,
-        SIM_ERR_OUT_OF_RANGE
+        SIM_ERR_OUT_OF_RANGE,
+        SIM_ERR_SIM_RUNNING
     }
 
     public class SimulationException : Exception

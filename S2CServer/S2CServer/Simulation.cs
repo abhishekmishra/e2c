@@ -23,39 +23,46 @@ namespace S2CCore
      * keeping score, initializing the display (if any) and also
      * ending the simulation when some goal is reached.
      */
-    public class Simulation
+    public class Simulation : IStatsPublisher
     {
 
         public SimConfig SimulationConfig { get; private set; }
-        private List<ISimulationViewer> Views = new List<ISimulationViewer>();
-        private Space sp;
+        private List<ISimulationViewer> Views;
+        private Space space;
+        private int round { get; set; }
         private List<ICleaningAgent> agents;
         public SimState State { get; private set; }
         public bool Abort { get; set; }
+        private ScoreKeeper statsPublisher;
 
         public Simulation()
         {
             // Load Default Simulation Configuration
             LoadConfig();
-
             _Init();
         }
 
         public Simulation(SimConfig cfg)
         {
             SimulationConfig = cfg;
-
             _Init();
         }
 
         private void _Init()
+        {
+            statsPublisher = new ScoreKeeper();
+            Views = new List<ISimulationViewer>();
+            AddView(statsPublisher);
+        }
+
+        public void Prepare()
         {
             Abort = false;
             State = SimState.STOPPED;
 
             // Create a Cleaning Space as per configuration
             Console.WriteLine("Created new space to clean -> ");
-            sp = new Space(SimulationConfig.Space.Rows, SimulationConfig.Space.Columns,
+            space = new Space(SimulationConfig.Space.Rows, SimulationConfig.Space.Columns,
                 SimulationConfig.Space.WallProbability, SimulationConfig.Space.DirtProbability);
 
             // Create agents as per configuration
@@ -64,7 +71,7 @@ namespace S2CCore
             foreach (var a in agents)
             {
                 int agentId = 0;
-                agentId = sp.InitAgent();
+                agentId = space.InitAgent();
                 a.AgentId = agentId;
                 a.SpaceSize = new Coords(SimulationConfig.Space.Rows, SimulationConfig.Space.Columns);
             }
@@ -75,28 +82,17 @@ namespace S2CCore
             Views.Add(v);
         }
 
-        private void _InitView()
-        {
-            // Setup a Console Simulation Viewer, if no View exists
-            if (Views.Count == 0)
-            {
-                AddView(new ConsoleSimulationViewer());
-            }
-            foreach (var view in Views)
-            {
-                view.ShowState(0, new List<IAgentCommand>(), sp.space, sp.agentSpace);
-            }
-        }
-
         public void Run()
         {
             if (State == SimState.STOPPED)
             {
+                Prepare();
                 Task.Run(() => _Run());
             }
             else
             {
-                throw new ArgumentException("Simulation is not stopped.");
+                throw new SimulationException("Simulation is not stopped.", 
+                    SimulationErrorCode.SIM_ERR_SIM_RUNNING, null);
             }
         }
 
@@ -104,15 +100,26 @@ namespace S2CCore
         {
             if (State == SimState.STOPPED)
             {
+                Prepare();
                 _Run();
+            }
+            else
+            {
+                throw new SimulationException("Simulation is not stopped.", 
+                    SimulationErrorCode.SIM_ERR_SIM_RUNNING, null);
             }
         }
 
         private void _Run()
         {
+            round = 0;
             State = SimState.RUNNING;
 
-            _InitView();
+            foreach (var view in Views)
+            {
+                view.ShowState(round, new List<IAgentCommand>(), space.space, space.agentSpace);
+            }
+
             foreach (var view in Views)
             {
                 view.SimStarted(0, null);
@@ -124,8 +131,8 @@ namespace S2CCore
             // Simulation continues till simulation goal is reached.
             if (agents.Count > 0)
             {
-                int round = 1;
-                while (sp.HasDirty())
+                round = 1;
+                while (space.HasDirty())
                 {
                     if (Abort)
                     {
@@ -137,20 +144,20 @@ namespace S2CCore
                     List<IAgentCommand> commands = new List<IAgentCommand>();
                     foreach (var a in agents)
                     {
-                        (int row, int col) = sp.WhereAmI(a.AgentId);
-                        bool dirty = sp.IsDirty(row, col);
+                        (int row, int col) = space.WhereAmI(a.AgentId);
+                        bool dirty = space.IsDirty(row, col);
                         var cmd = a.NextCommand(new Coords(row, col), dirty);
                         try
                         {
                             if (cmd is CleanCommand)
                             {
                                 Coords c = cmd.Location;
-                                sp.Clean(a.AgentId, c.Row, c.Column);
+                                space.Clean(a.AgentId, c.Row, c.Column);
                             }
                             else if (cmd is MoveToComand)
                             {
                                 Coords c = cmd.Location;
-                                sp.MoveAgent(a.AgentId, c.Row, c.Column);
+                                space.MoveAgent(a.AgentId, c.Row, c.Column);
                             }
                             cmd.Status = true;
                             cmd.FailureReason = null;
@@ -167,7 +174,7 @@ namespace S2CCore
                     }
                     foreach (var view in Views)
                     {
-                        view.ShowState(round, commands, sp.space, sp.agentSpace);
+                        view.ShowState(round, commands, space.space, space.agentSpace);
                     }
                     round += 1;
                 }
@@ -178,32 +185,8 @@ namespace S2CCore
                 view.SimComplete();
             }
 
-            _Init();
+            Prepare();
         }
-
-        //private void LoadConfig()
-        //{
-        //    json
-        //    // Setup the input
-        //    var input = new StringReader(Document);
-
-        //    var deserializer = new DeserializerBuilder()
-        //        .WithNamingConvention(CamelCaseNamingConvention.Instance)
-        //        .Build();
-
-        //    SimulationConfig = deserializer.Deserialize<SimConfig>(input);
-        //}
-
-        //        private const string Document = @"---
-        //            space:
-        //                rows: 4
-        //                columns: 4
-        //                dirtProbability: 0.3
-        //                wallProbability: 0.2
-
-        //            agents:
-        //                - type: simple
-        //...";
 
         private void LoadConfig()
         {
@@ -214,6 +197,16 @@ namespace S2CCore
             };
 
             SimulationConfig = JsonSerializer.Deserialize<SimConfig>(Document, options);
+        }
+
+        public void RegisterListener(IStatsListener statsListener)
+        {
+            statsPublisher.RegisterListener(statsListener);
+        }
+
+        public void DeregisterListener(IStatsListener statsListener)
+        {
+            statsPublisher.DeregisterListener(statsListener);
         }
 
         private const string Document = @"

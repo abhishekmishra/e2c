@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace S2CServices
 {
-    public class WebSimulationViewer : ISimulationViewer
+    public class WebSimulationViewer : ISimulationViewer, IStatsListener
     {
         private Dictionary<int, List<IAgentCommand>> commands;
         private Dictionary<int, List<string>> messages;
@@ -17,6 +17,8 @@ namespace S2CServices
         private Dictionary<int, Matrix<double>> agentSpaceHist;
 
         public SimState State { get; set; }
+        public SpaceStatistics SpaceStatistics { get; set; }
+        public List<AgentStatistics> AgentStatistics { get; set; }
 
         public WebSimulationViewer()
         {
@@ -99,6 +101,8 @@ namespace S2CServices
                         s.AgentSpaceArr[i].Add(a[i, j]);
                     }
                 }
+                s.SpaceStatistics = SpaceStatistics;
+                s.AgentStatistics = AgentStatistics;
                 return s;
             }
             else
@@ -107,5 +111,11 @@ namespace S2CServices
             }
         }
 
+        public void GetStats(SpaceStatistics spaceStatistics,
+            Dictionary<int, AgentStatistics> agentStatistics)
+        {
+            SpaceStatistics = spaceStatistics;
+            AgentStatistics = new List<AgentStatistics>(agentStatistics.Values);
+        }
     }
 }

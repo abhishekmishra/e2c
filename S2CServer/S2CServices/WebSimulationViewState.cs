@@ -15,5 +15,7 @@ namespace S2CServices
         public List<List<double>> SpaceArr { get; set; }
         public List<List<double>> AgentSpaceArr { get; set; }
         public List<IAgentCommand> Commands { get; set; }
+        public SpaceStatistics SpaceStatistics { get; set; }
+        public List<AgentStatistics> AgentStatistics { get; set; }
     }
 }

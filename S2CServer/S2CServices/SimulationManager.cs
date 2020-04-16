@@ -49,6 +49,7 @@ namespace S2CServices
 
             WebSimulationViewer w = new WebSimulationViewer();
             s.AddView(w);
+            s.RegisterListener(w);
 
             _sims.Add(s);
             _views.Add(w);
