@@ -49,11 +49,11 @@ namespace S2CCore
             {
                 SpaceStats.Size = new Coords(space.RowCount, space.ColumnCount);
                 SpaceStats.Dirty = 0;
-                for(int i = 0; i < space.RowCount; i++)
+                for (int i = 0; i < space.RowCount; i++)
                 {
-                    for(int j = 0; j < space.ColumnCount; j++)
+                    for (int j = 0; j < space.ColumnCount; j++)
                     {
-                        if(space[i, j] == Space.DIRTY)
+                        if (space[i, j] == Space.DIRTY)
                         {
                             SpaceStats.Dirty += 1;
                         }
@@ -65,9 +65,9 @@ namespace S2CCore
                 }
             }
 
-            foreach(var command in commands)
+            foreach (var command in commands)
             {
-                if(!AgentStats.ContainsKey(command.AgentId))
+                if (!AgentStats.ContainsKey(command.AgentId))
                 {
                     var agentStats = new AgentStatistics();
                     agentStats.AgentId = command.AgentId;
@@ -76,11 +76,12 @@ namespace S2CCore
 
                 var astats = AgentStats[command.AgentId];
                 astats.Commands += 1;
-                if(command.Status)
+                if (command.Status)
                 {
                     astats.CommandSuccess += 1;
                 }
-                astats.ErrorRate = 1 - ((astats.CommandSuccess * 1.0) / astats.Commands);
+                astats.ErrorRate = Math.Round(
+                    (1 - ((astats.CommandSuccess * 1.0) / astats.Commands)) * 100.0, 2);
 
                 if (command.Name == "clean")
                 {
@@ -100,12 +101,16 @@ namespace S2CCore
                     }
                 }
 
-                astats.Efficiency = (astats.CleanSuccess * 1.0) / astats.Commands;
+                astats.Efficiency = Math.Round(
+                    (astats.CleanSuccess * 100.0) / astats.Commands, 2);
             }
 
-            foreach(var listener in StatsListeners)
+            if (simRound > 0)
             {
-                listener.GetStats(SpaceStats, AgentStats);
+                foreach (var listener in StatsListeners)
+                {
+                    listener.GetStats(SpaceStats, AgentStats);
+                }
             }
         }
 
@@ -126,7 +131,7 @@ namespace S2CCore
 
         public void RegisterListener(IStatsListener statsListener)
         {
-            if(!StatsListeners.Contains(statsListener))
+            if (!StatsListeners.Contains(statsListener))
             {
                 StatsListeners.Add(statsListener);
             }

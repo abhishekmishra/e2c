@@ -51,7 +51,8 @@ function abort_sim() {
 function tabulateScores(data, columns) {
     $("#score_table").html("");
     var table = d3.select('#score_table').append('table')
-    var thead = table.append('thead')
+        .attr("class", "table table-dark");
+    var thead = table.append('thead');
     var tbody = table.append('tbody');
 
     // append the header row

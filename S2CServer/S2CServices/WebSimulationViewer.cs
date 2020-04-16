@@ -17,8 +17,8 @@ namespace S2CServices
         private Dictionary<int, Matrix<double>> agentSpaceHist;
 
         public SimState State { get; set; }
-        public SpaceStatistics SpaceStatistics { get; set; }
-        public List<AgentStatistics> AgentStatistics { get; set; }
+        public Dictionary<int, SpaceStatistics> SpaceStatistics { get; set; }
+        public Dictionary<int, List<AgentStatistics>> AgentStatistics { get; set; }
 
         public WebSimulationViewer()
         {
@@ -33,6 +33,8 @@ namespace S2CServices
             messages = new Dictionary<int, List<string>>();
             spaceHist = new Dictionary<int, Matrix<double>>();
             agentSpaceHist = new Dictionary<int, Matrix<double>>();
+            SpaceStatistics = new Dictionary<int, SpaceStatistics>();
+            AgentStatistics = new Dictionary<int, List<AgentStatistics>>();
         }
 
         public void ShowMessage(string msg)
@@ -101,8 +103,8 @@ namespace S2CServices
                         s.AgentSpaceArr[i].Add(a[i, j]);
                     }
                 }
-                s.SpaceStatistics = SpaceStatistics;
-                s.AgentStatistics = AgentStatistics;
+                s.SpaceStatistics = SpaceStatistics[round];
+                s.AgentStatistics = AgentStatistics[round];
                 return s;
             }
             else
@@ -114,8 +116,9 @@ namespace S2CServices
         public void GetStats(SpaceStatistics spaceStatistics,
             Dictionary<int, AgentStatistics> agentStatistics)
         {
-            SpaceStatistics = spaceStatistics;
-            AgentStatistics = new List<AgentStatistics>(agentStatistics.Values);
+            SpaceStatistics.Add(CurrentRound, spaceStatistics);
+            var s = new List<AgentStatistics>(agentStatistics.Values);
+            AgentStatistics.Add(CurrentRound, s);
         }
     }
 }
