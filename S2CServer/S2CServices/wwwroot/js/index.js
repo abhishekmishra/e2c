@@ -233,23 +233,23 @@ function fetchRound(id, roundNum) {
             //    }
             //}
 
-            //var cmdDiv = d3.select("#agent_commands");
-            //var $container = $("#agent_commands");
-            //for (var count = 0; count < status.commands.length; count++) {
-            //    var element = status.commands[count];
-            //    cmdDiv.append("div")
-            //        .attr('id', 'agent_command_' + cmdsCount)
-            //        .text("id#" + element.agentId + " #:" + cmdsCount + " command:" + element.name)
-            //    //console.log(element);
-            //    //console.log(cmdsCount);
+            var cmdDiv = d3.select("#agent_commands");
+            var $container = $("#agent_commands");
+            for (var count = 0; count < status.commands.length; count++) {
+                var element = status.commands[count];
+                cmdDiv.append("div")
+                    .attr('id', 'agent_command_' + cmdsCount)
+                    .text("id#" + element.agentId + " #:" + cmdsCount + " command:" + element.name)
+                //console.log(element);
+                //console.log(cmdsCount);
 
-            //    // see https://stackoverflow.com/questions/2905867/how-to-scroll-to-specific-item-using-jquery
-            //    var $scrollTo = $('#agent_command_' + cmdsCount);
-            //    $container.scrollTop(
-            //        $scrollTo.offset().top - $container.offset().top + $container.scrollTop()
-            //    );
-            //    cmdsCount += 1;
-            //};
+                // see https://stackoverflow.com/questions/2905867/how-to-scroll-to-specific-item-using-jquery
+                var $scrollTo = $('#agent_command_' + cmdsCount);
+                $container.scrollTop(
+                    $scrollTo.offset().top - $container.offset().top + $container.scrollTop()
+                );
+                cmdsCount += 1;
+            };
             tabulateScores(status.agentStatistics,
                 ["agentId", "clean", "moves", "efficiency", "errorRate"],
                 ["#", "Clean", "Move", "Eff %", "Err %"]);

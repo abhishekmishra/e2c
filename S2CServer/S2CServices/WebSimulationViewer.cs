@@ -116,8 +116,12 @@ namespace S2CServices
         public void GetStats(int round, SpaceStatistics spaceStatistics,
             Dictionary<int, AgentStatistics> agentStatistics)
         {
-            SpaceStatistics.Add(round, spaceStatistics);
-            var s = new List<AgentStatistics>(agentStatistics.Values);
+            SpaceStatistics.Add(round, spaceStatistics.ShallowCopy());
+            var s = new List<AgentStatistics>();
+            foreach(var v in agentStatistics.Values)
+            {
+                s.Add(v.ShallowCopy());
+            }
             AgentStatistics.Add(round, s);
         }
     }

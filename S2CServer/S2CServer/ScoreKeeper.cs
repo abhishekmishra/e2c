@@ -10,6 +10,11 @@ namespace S2CCore
         public Coords Size { get; set; }
         public int Dirty { get; set; }
         public int Wall { get; set; }
+
+        public SpaceStatistics ShallowCopy()
+        {
+            return (SpaceStatistics)this.MemberwiseClone();
+        }
     }
 
     public class AgentStatistics
@@ -23,6 +28,10 @@ namespace S2CCore
         public int CleanSuccess { get; set; } = 0;
         public double Efficiency { get; set; } = 0;
         public double ErrorRate { get; set; } = 0;
+        public AgentStatistics ShallowCopy()
+        {
+            return (AgentStatistics)this.MemberwiseClone();
+        }
     }
     public class ScoreKeeper : ISimulationViewer, IStatsPublisher
     {
