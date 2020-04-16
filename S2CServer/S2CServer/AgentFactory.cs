@@ -12,7 +12,8 @@ namespace S2CCore
             = new Dictionary<string, Type>()
             {
                 { "simple", _CurrentAssembly.GetType("S2CCore.SimpleCleaningAgent") },
-                { "simple.bound", _CurrentAssembly.GetType("S2CCore.SimpleBoundCheckAgent") }
+                { "simple.bound", _CurrentAssembly.GetType("S2CCore.SimpleBoundCheckAgent") },
+                { "simple.boundandwall", _CurrentAssembly.GetType("S2CCore.BoundAndWallCheckAgent") },
             };
 
 

@@ -9,6 +9,7 @@ namespace S2CCore
 
         IAgentCommand NextCommand(Coords location, bool isDirty);
 
-        void CommandResult(bool success, string failureReason, SimulationErrorCode errorCode);
+        void CommandResult(bool success, string failureReason, 
+            SimulationErrorCode errorCode, Coords location);
     }
 }

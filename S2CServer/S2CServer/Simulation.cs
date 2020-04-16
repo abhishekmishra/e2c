@@ -162,21 +162,23 @@ namespace S2CCore
                             cmd.Status = true;
                             cmd.FailureReason = null;
                             commands.Add(cmd);
-                            a.CommandResult(true, null, SimulationErrorCode.SIM_ERR_SUCCESS);
+                            a.CommandResult(true, null, 
+                                SimulationErrorCode.SIM_ERR_SUCCESS, cmd.Location);
                         }
                         catch (SimulationException e)
                         {
                             cmd.Status = false;
                             cmd.FailureReason = e.Message;
                             commands.Add(cmd);
-                            a.CommandResult(false, e.Message, e.ErrorCode);
+                            a.CommandResult(false, e.Message, e.ErrorCode, e.Location);
                         }
                         catch (Exception e)
                         {
                             cmd.Status = false;
                             cmd.FailureReason = e.Message;
                             commands.Add(cmd);
-                            a.CommandResult(false, e.Message, SimulationErrorCode.SIM_ERR_UNKNOWN);
+                            a.CommandResult(false, e.Message, 
+                                SimulationErrorCode.SIM_ERR_UNKNOWN, cmd.Location);
                         }
                     }
                     foreach (var view in Views)

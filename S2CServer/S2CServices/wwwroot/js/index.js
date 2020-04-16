@@ -2,8 +2,8 @@
 
 var simConfig = {
     space: {
-        rows: 10,
-        columns: 10,
+        rows: 20,
+        columns: 20,
         dirtProbability: 0.3,
         wallProbability: 0.1
     },
@@ -14,6 +14,10 @@ var simConfig = {
         },
         {
             type: "simple.bound",
+            params: {}
+        },
+        {
+            type: "simple.boundandwall",
             params: {}
         },
     ]
