@@ -9,12 +9,12 @@
 </head>
 <body>
     <div class="container-lg">
-        <nav class="navbar navbar-dark bg-dark m-0 p-2">
+        <nav class="navbar navbar-dark bg-dark m-0 p-2 border-bottom border-secondary">
             <span class="navbar-brand mb-0 h1">S2C: Space To Clean Simulator</span>
             <ul class="nav justify-content-right">
                 <li class="nav-item">
                     <button type="button" class="btn btn-primary" onclick="new_sim();">New Sim</button>
-                    <button type="button" class="btn btn-outline-danger" onclick="abort_sim();">Stop Sim</button>
+                    <button type="button" class="btn btn-danger" onclick="abort_sim();">Stop Sim</button>
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#configModal">
                         Configure Sim
                     </button>
@@ -23,13 +23,29 @@
         </nav>
 
         <div class="row m-0">
-            <div class="col-8 h-100 bg-dark">
-                <div id="sim" class="center text-center border border-dark w-90 h-90">
+            <div class="col-3 bg-dark">
+                <div class="card text-white bg-dark">
+                    <div class="card-header text-center border-0 mt-2">
+                        Agent Commands
+                    </div>
+                    <div class="card-body">
+                        <span class="card-title"></span>
+                        <div class="bg-dark text-primary" style="height: 300px; overflow-y:auto" id="agent_commands">
+
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-4 bg-dark">
-                <div class="card">
-                    <div class="card-header">
+            <div class="col-6 bg-dark border-left border-right border-secondary" style="height: 410px">
+                <div id="sim" class="center text-center mt-2">
+                    <svg height="400px" width="400px">
+                        <rect height="400px" width="400px" fill="whitesmoke"></rect>
+                    </svg>
+                </div>
+            </div>
+            <div class="col-3 bg-dark">
+                <div class="card text-white bg-dark">
+                    <div class="card-header text-center border-0 mt-2">
                         Agent Scores @ Round #<span id="round_num"></span>
                     </div>
                     <div class="card-body">
@@ -37,26 +53,17 @@
                         <div id="score_table"></div>
                     </div>
                 </div>
-                <div class="card">
-                    <div class="card-header">
-                        Messages
-                    </div>
-                    <div class="card-body">
-                        <span class="card-title"></span>
-                    </div>
-                </div>
             </div>
         </div>
 
-        <div class="row m-0" style="height: 200px;">
+        <!--<div class="row m-0" style="height: 200px;">
             <div class="col-12 bg-dark">
                 <h5 class="text-light">Agent Commands</h5>
                 <div class="bg-dark text-primary" style="height: 180px; overflow-y:scroll" id="agent_commands">
 
                 </div>
             </div>
-        </div>
-
+        </div>-->
         <!-- Modal -->
         <div class="modal fade" id="configModal" tabindex="-1" role="dialog" aria-labelledby="configModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
