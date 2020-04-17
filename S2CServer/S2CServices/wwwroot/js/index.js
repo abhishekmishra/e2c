@@ -25,6 +25,10 @@ var simConfig = {
 
 var cmdsCount = 0;
 
+function agentLabelFromId(agentId) {
+    return String.fromCharCode(64 + (agentId - 1) / 2)
+}
+
 $("#configModal").on("shown.bs.modal", function (e) {
     $('#numRows').val(simConfig.space.rows);
     $('#numCols').val(simConfig.space.columns);
@@ -82,7 +86,9 @@ function tabulateScores(data, columns, colnames) {
         })
         .enter()
         .append('td')
-        .text(function (d) { return d.value; });
+        .text(function (d) {
+            return d.value;
+        });
 
     return table;
 }
@@ -175,8 +181,8 @@ function fetchRound(id, roundNum) {
                 .attr("height", function (d, i, j) { return rh })
                 .attr("fill", function (d, i, j) {
                     if (d == 0) return "whitesmoke";
-                    if (d == 1) return "brown";
-                    if (d == 2) return "grey";
+                    if (d == 1) return "black";
+                    if (d == 2) return "red";
                 });
 
             var texts = svgCtr.append("g")
@@ -210,7 +216,8 @@ function fetchRound(id, roundNum) {
                 var element = status.commands[count];
                 cmdDiv.append("div")
                     .attr('id', 'agent_command_' + cmdsCount)
-                    .text("id#" + element.agentId + " #:" + cmdsCount + " command:" + element.name)
+                    .text(agentLabelFromId(element.agentId) + ": " +
+                        element.name.toUpperCase() + " [" + element.location.row + ", " + element.location.column + "]");
 
                 // see https://stackoverflow.com/questions/2905867/how-to-scroll-to-specific-item-using-jquery
                 var $scrollTo = $('#agent_command_' + cmdsCount);
@@ -219,8 +226,13 @@ function fetchRound(id, roundNum) {
                 );
                 cmdsCount += 1;
             };
+
+            for (var i = 0; i < status.agentStatistics.length; i++) {
+                var v = status.agentStatistics[i];
+                v["agentLabel"] = agentLabelFromId(v["agentId"]);
+            }
             tabulateScores(status.agentStatistics,
-                ["agentId", "clean", "moves", "efficiency", "errorRate"],
+                ["agentLabel", "clean", "moves", "efficiency", "errorRate"],
                 ["#", "Clean", "Move", "Eff %", "Err %"]);
             fetchRound(id, roundNum + 1);
         });

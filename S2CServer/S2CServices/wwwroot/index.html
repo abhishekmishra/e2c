@@ -13,15 +13,23 @@
             <span class="navbar-brand mb-0 h1">S2C: Space To Clean Simulator</span>
             <ul class="nav justify-content-right">
                 <li class="nav-item">
-                    <button type="button" class="btn btn-primary" onclick="new_sim();">New Sim</button>
-                    <button type="button" class="btn btn-danger" onclick="abort_sim();">Stop Sim</button>
+                    <button type="button" class="btn btn-primary" onclick="new_sim();">Start</button>
+                    <button type="button" class="btn btn-danger" onclick="abort_sim();">Stop</button>
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#configModal">
-                        Configure Sim
+                        Configure
                     </button>
                 </li>
             </ul>
         </nav>
-
+        <div class="row m-0 p-1 bg-dark border-bottom border-secondary text-light">
+            <div class="col-12">
+                <div class="h5 text-center">
+                    AI Cleaning Agents (A-E) compete to clear <span style="color: whitesmoke">▮</span>
+                    a 2D space of dirt <span style="color: red">▮</span>
+                    while avoiding walls <span style="color: black">▮</span>.
+                </div>
+            </div>
+        </div>
         <div class="row m-0">
             <div class="col-3 bg-dark">
                 <div class="card text-white bg-dark">
@@ -30,7 +38,7 @@
                     </div>
                     <div class="card-body">
                         <span class="card-title"></span>
-                        <div class="bg-dark text-primary" style="height: 300px; overflow-y:auto" id="agent_commands">
+                        <div class="bg-dark" style="height: 300px; overflow-y:auto" id="agent_commands">
 
                         </div>
                     </div>
