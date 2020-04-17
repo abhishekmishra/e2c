@@ -29,11 +29,34 @@ function agentLabelFromId(agentId) {
     return String.fromCharCode(64 + (agentId - 1) / 2)
 }
 
+var agentTypes = {
+    "simple": "Simple Random Agent",
+    "simple.bound": "Random Agent w/bound check",
+    "simple.boundandwall": "Random Agent w/bound & wall check"
+}
+
 $("#configModal").on("shown.bs.modal", function (e) {
     $('#numRows').val(simConfig.space.rows);
     $('#numCols').val(simConfig.space.columns);
     $('#dirtProb').val(simConfig.space.dirtProbability);
     $('#wallProb').val(simConfig.space.wallProbability);
+
+    $('#numAgents').val(simConfig.agents.length);
+    for (var i = 0; i < simConfig.agents.length; i++) {
+        var formElemId = 'agentType' + i;
+        var typeSelect = $('<select>').attr('id', formElemId)
+            .attr('class', 'form-control');
+        for (var type in agentTypes) {
+            //console.log(type);
+            //var opt = $('option').attr('value', type).val(agentTypes[type]);
+            //console.log(opt);
+            typeSelect.append(new Option(type, agentTypes[type]));
+        }
+        $('#agentConfig').append($('<label>')
+            .attr('for', formElemId)
+            .text("Agent #" + i));
+        $('#agentConfig').append(typeSelect);
+    }
 });
 
 $("#configModalSave").click((e) => {

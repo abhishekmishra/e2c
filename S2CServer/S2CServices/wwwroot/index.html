@@ -85,15 +85,23 @@
                     <div class="modal-body">
                         <section>
                             <form>
-                                <div class="form-group">
-                                    <label for="numRows">Num Rows</label>
-                                    <input type="number" class="form-control" id="numRows">
-                                    <label for="numCols">Num Columns</label>
-                                    <input type="number" class="form-control" id="numCols">
-                                    <label for="dirtProb">Dirt Probability</label>
-                                    <input type="number" min="0.0" max="0.9" step="0.1" class="form-control" id="dirtProb">
-                                    <label for="wallProb">Wall Probability</label>
-                                    <input type="number" min="0.0" max="0.9" step="0.1" class="form-control" id="wallProb">
+                                <div class="form-group row">
+                                    <div class="col-6">
+                                        <h5 class="border-bottom pb-2">Space Config</h5>
+                                        <label for="numRows">Num Rows</label>
+                                        <input type="number" class="form-control" id="numRows">
+                                        <label for="numCols">Num Columns</label>
+                                        <input type="number" class="form-control" id="numCols">
+                                        <label for="dirtProb">Dirt Probability</label>
+                                        <input type="number" min="0.0" max="0.9" step="0.1" class="form-control" id="dirtProb">
+                                        <label for="wallProb">Wall Probability</label>
+                                        <input type="number" min="0.0" max="0.9" step="0.1" class="form-control" id="wallProb">
+                                    </div>
+                                    <div id="agentConfig" class="col-6">
+                                        <h5 class="border-bottom pb-2">Agent Config</h5>
+                                        <label for="numAgents"># of Agents</label>
+                                        <input type="number" min="1" max="5" class="form-control" id="numAgents" value="3">
+                                    </div>
                                 </div>
                             </form>
                         </section>
