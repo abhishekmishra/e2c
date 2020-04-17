@@ -31,8 +31,8 @@ function agentLabelFromId(agentId) {
 
 var agentTypes = {
     "simple": "Simple Random Agent",
-    "simple.bound": "Random Agent w/bound check",
-    "simple.boundandwall": "Random Agent w/bound & wall check"
+    "simple.bound": "Bound Checker Agent",
+    "simple.boundandwall": "Bound/Wall Checker Agent"
 }
 
 $("#configModal").on("shown.bs.modal", function (e) {
@@ -42,20 +42,20 @@ $("#configModal").on("shown.bs.modal", function (e) {
     $('#wallProb').val(simConfig.space.wallProbability);
 
     $('#numAgents').val(simConfig.agents.length);
+    $('#agentConfig').html('');
     for (var i = 0; i < simConfig.agents.length; i++) {
         var formElemId = 'agentType' + i;
         var typeSelect = $('<select>').attr('id', formElemId)
             .attr('class', 'form-control');
         for (var type in agentTypes) {
-            //console.log(type);
-            //var opt = $('option').attr('value', type).val(agentTypes[type]);
-            //console.log(opt);
-            typeSelect.append(new Option(type, agentTypes[type]));
+            typeSelect.append(new Option(agentTypes[type], type));
         }
         $('#agentConfig').append($('<label>')
             .attr('for', formElemId)
             .text("Agent #" + i));
         $('#agentConfig').append(typeSelect);
+        console.log(simConfig.agents[i].type);
+        typeSelect.val(simConfig.agents[i].type);
     }
 });
 
