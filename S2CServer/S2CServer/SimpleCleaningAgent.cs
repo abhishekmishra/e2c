@@ -4,6 +4,7 @@ using System.Text;
 
 namespace S2CCore
 {
+    //TODO: move to Cleaning Agent base class
     public enum Direction
     {
         N = 0, E, W, S
