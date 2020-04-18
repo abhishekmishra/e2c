@@ -20,6 +20,12 @@ var simConfig = {
             type: "simple.boundandwall",
             params: {}
         },
+        {
+            type: "http",
+            params: {
+                "url": "http://127.0.0.1:5000/"
+            }
+        },
     ]
 }
 
@@ -32,7 +38,8 @@ function agentLabelFromId(agentId) {
 var agentTypes = {
     "simple": "Simple Random Agent",
     "simple.bound": "Bound Checker Agent",
-    "simple.boundandwall": "Bound/Wall Checker Agent"
+    "simple.boundandwall": "Bound/Wall Checker Agent",
+    "http": "HTTP Proxy Agent"
 }
 
 var modalAgentArr;
@@ -79,6 +86,10 @@ function initAgentConfigInModal() {
     for (var i = 0; i < modalAgentArr.length; i++) {
         var typeSelect = createAgentSelect(i);
         typeSelect.val(modalAgentArr[i].type);
+        if (modalAgentArr[i].type == "http") {
+            var urlElemId = 'agentType_url_' + i;
+            $('#' + urlElemId).val(modalAgentArr[i].params['url']).attr('type', 'text');
+        }
     }
 }
 
@@ -86,6 +97,7 @@ function createAgentSelect(i) {
     var formElemId = 'agentType_' + i;
     var labelElemId = 'agentType_label_' + i;
     var buttonElemId = 'agentType_btn_' + i;
+    var urlElemId = 'agentType_url_' + i;
     var typeSelect = $('<select>').attr('id', formElemId)
         .attr('class', 'form-control')
         .attr('agent_id', i);
@@ -101,6 +113,9 @@ function createAgentSelect(i) {
         .attr('id', buttonElemId)
         .text("Del"));
     $('#agentConfig').append(typeSelect);
+    $('#agentConfig').append($('<input>').attr('type', 'hidden')
+        .attr('class', 'form-control')
+        .attr('id', urlElemId));
     
     $('#' + buttonElemId).click((e) => {
         removeRow(i);
@@ -108,6 +123,14 @@ function createAgentSelect(i) {
     $('#' + formElemId).change((e) => {
         //console.log($('#' + formElemId).val());
         var aid = parseInt($('#' + formElemId).attr('agent_id'));
+        var urlElemId = 'agentType_url_' + aid;
+        if ($('#' + formElemId).val() == "http") {
+            $('#' + urlElemId).attr('type', 'text');
+            modalAgentArr[aid].params['url'] = $('#' + urlElemId).val();
+        } else {
+            $('#' + urlElemId).attr('type', 'hidden');
+            delete modalAgentArr[aid].params['url'];
+        }
         modalAgentArr[aid].type = $('#' + formElemId).val();
     });
     return typeSelect;
