@@ -4,6 +4,18 @@ This program is based on the vacuum cleaner agent problem in Chapter 1 of book A
 
 ![alt text](https://i.imgur.com/IgIPrcD.png "S2C Screenshot")
 
+**Table of Contents**
+
+* [Concepts](#Concepts)
+  * [The Space](#the-space)
+  * [The Agent](#the-agent)
+  * [Objective](#objective)
+* [Implementation](#Implementation)
+  * [Agent Contract](#Agent-Contract)
+* [Installation](#Installation)
+  * [From Code](#from-code)
+  * [From Binaries](#from-binaries)
+
 # Concepts
 
 ## The Space
@@ -35,7 +47,7 @@ An agent implements the following methods/endpoints.
 
 The simplest example of an agent implementation is https://github.com/abhishekmishra/s2c/blob/master/S2CServer/S2CCore/SimpleCleaningAgent.cs
 
-# Installation and Usage
+# Installation
 
 ## From code
 Install dotnet core runtime for your platform - see https://dotnet.microsoft.com/download
