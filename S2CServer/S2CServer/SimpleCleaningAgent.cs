@@ -26,7 +26,7 @@ namespace S2CCore
             else
             {
                 (int r, int c) = NewLocation(location);
-                return new MoveToComand(AgentId, r, c);
+                return new MoveToCommand(AgentId, r, c);
             }
         }
     }

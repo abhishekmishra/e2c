@@ -4,9 +4,9 @@ using System.Text;
 
 namespace S2CCore
 {
-    public class MoveToComand: BaseCommand
+    public class MoveToCommand: BaseCommand
     {
-        public MoveToComand(int agentId, int row, int col)
+        public MoveToCommand(int agentId, int row, int col)
         {
             Name = "moveto";
             AgentId = agentId;

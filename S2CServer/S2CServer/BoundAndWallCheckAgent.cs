@@ -49,7 +49,7 @@ namespace S2CCore
                 } while (r < 0 || r >= SpaceSize.Row
                         || c < 0 || c >= SpaceSize.Column
                         || wallSpace[r, c] == 1);
-                return new MoveToComand(AgentId, r, c);
+                return new MoveToCommand(AgentId, r, c);
             }
         }
     }

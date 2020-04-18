@@ -25,7 +25,7 @@ namespace S2CCore
                     (r, c) = NewLocation(location);
                 } while (r < 0 || r >= SpaceSize.Row
                         || c < 0 || c >= SpaceSize.Column);
-                return new MoveToComand(AgentId, r, c);
+                return new MoveToCommand(AgentId, r, c);
             }
         }
     }

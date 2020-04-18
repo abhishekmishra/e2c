@@ -14,6 +14,7 @@ namespace S2CCore
                 { "simple", _CurrentAssembly.GetType("S2CCore.SimpleCleaningAgent") },
                 { "simple.bound", _CurrentAssembly.GetType("S2CCore.SimpleBoundCheckAgent") },
                 { "simple.boundandwall", _CurrentAssembly.GetType("S2CCore.BoundAndWallCheckAgent") },
+                { "http", _CurrentAssembly.GetType("S2CCore.HttpAgent") },
             };
 
 

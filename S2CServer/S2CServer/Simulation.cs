@@ -154,7 +154,7 @@ namespace S2CCore
                                 Coords c = cmd.Location;
                                 space.Clean(a.AgentId, c.Row, c.Column);
                             }
-                            else if (cmd is MoveToComand)
+                            else if (cmd is MoveToCommand)
                             {
                                 Coords c = cmd.Location;
                                 space.MoveAgent(a.AgentId, c.Row, c.Column);
@@ -234,20 +234,28 @@ namespace S2CCore
                 },
                 ""agents"": [
                     {
-                        ""type"": ""simple"",
-                        ""params"": {}
-                    },
-                    {
-                        ""type"": ""simple.bound"",
-                        ""params"": {}
-                    },
-                    {
-                        ""type"": ""simple.bound"",
-                        ""params"": {}
+                        ""type"": ""http"",
+                        ""params"": {
+                            ""url"": ""http://127.0.0.1:5000/""
+                        }
                     },
                 ]
             }
         ";
+
+                    //        {
+                    //    ""type"": ""simple"",
+                    //    ""params"": {}
+                    //},
+                    //{
+                    //    ""type"": ""simple.bound"",
+                    //    ""params"": {}
+                    //},
+                    //{
+                    //    ""type"": ""simple.bound"",
+                    //    ""params"": {}
+                    //},
+
         //{
         //    ""type"": ""simple-bound-check"",
         //    ""params"": {
