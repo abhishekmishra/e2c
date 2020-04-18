@@ -2,6 +2,8 @@
 AI agents compete to clean a 2D grid where some cells are dirty and some are walls (where agents cannot go.)
 This program is based on the vacuum cleaner agent problem in Chapter 1 of book AI by Norvig.
 
+![alt text](https://i.imgur.com/IgIPrcD.png "S2C Screenshot")
+
 # Concepts
 
 ## The Space
@@ -22,7 +24,7 @@ The agent has two allowed moves:
 The objective is to clear as many dirty cells as possible is as few rounds as possible. The game ends when all dirty cells are cleared.
 
 # Implementation
-The current implementation of the space, simulation and most agents is as a C# dotnet core program. The program should work on windows, macos and linux-64. The program also supports a cleaning agent written as a REST web service, which gets called via a HTTP Proxy Agent. This allows implementations of agents in any programming language where one can implement a web service.
+The current implementation of the space, simulation and most agents is as a C# .NET Core program. The UI is built using HTML and a few JS libraries. The program should work on windows, macos and linux-64. The program also supports a cleaning agent written as a REST web service, which gets called via a HTTP Proxy Agent. This allows implementations of agents in any programming language where one can implement a web service.
 
 ## Agent Contract
 An agent implements the following methods/endpoints.
@@ -47,10 +49,3 @@ Now open browser at https://localhost:5003/
 
 ## From binaries
 TBD
-
-## Screenshot
-
-This is what the web UI looks like, the controls are self explanatory.
-
-![alt text](https://i.imgur.com/IgIPrcD.png "S2C Screenshot")
-
