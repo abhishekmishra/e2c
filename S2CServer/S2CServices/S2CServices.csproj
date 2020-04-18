@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\S2CServer\S2CCore.csproj" />
+    <ProjectReference Include="..\S2CCore\S2CCore.csproj" />
   </ItemGroup>
 
 
