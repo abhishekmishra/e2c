@@ -24,9 +24,9 @@
         <div class="row m-0 p-1 bg-dark border-bottom border-secondary text-light">
             <div class="col-12">
                 <div class="h5 text-center">
-                    AI Cleaning Agents (A-E) compete to clear <span style="color: whitesmoke">▮</span>
-                    a 2D space of dirt <span style="color: red">▮</span>
-                    while avoiding walls <span style="color: black">▮</span>.
+                    AI Cleaning Agents (A-E) compete to clear <span class="h3" style="color: whitesmoke">▮</span>
+                    a 2D space of dirt <span class="h3" style="color: red">▮</span>
+                    while avoiding walls <span class="h3" style="color: black">▮</span>.
                 </div>
             </div>
         </div>
@@ -99,8 +99,10 @@
                                     </div>
                                     <div class="col-6">
                                         <h5 class="border-bottom pb-2">Agent Config</h5>
-                                        <label for="numAgents"># of Agents</label>
-                                        <input type="number" min="1" max="5" class="form-control" id="numAgents" value="3">
+                                        <label for="numAgents">
+                                            # of Agents: <span id="numAgents"></span>
+                                            <button type="button" id="configModalAddAgent" class="btn btn-outline-primary">Add</button>
+                                        </label>
                                         <div id="agentConfig"></div>
                                     </div>
                                 </div>

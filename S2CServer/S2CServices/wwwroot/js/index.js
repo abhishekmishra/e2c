@@ -35,28 +35,33 @@ var agentTypes = {
     "simple.boundandwall": "Bound/Wall Checker Agent"
 }
 
+var modalAgentArr;
+
 $("#configModal").on("shown.bs.modal", function (e) {
     $('#numRows').val(simConfig.space.rows);
     $('#numCols').val(simConfig.space.columns);
     $('#dirtProb').val(simConfig.space.dirtProbability);
     $('#wallProb').val(simConfig.space.wallProbability);
 
-    $('#numAgents').val(simConfig.agents.length);
-    $('#agentConfig').html('');
-    for (var i = 0; i < simConfig.agents.length; i++) {
-        var formElemId = 'agentType' + i;
-        var typeSelect = $('<select>').attr('id', formElemId)
-            .attr('class', 'form-control');
-        for (var type in agentTypes) {
-            typeSelect.append(new Option(agentTypes[type], type));
-        }
-        $('#agentConfig').append($('<label>')
-            .attr('for', formElemId)
-            .text("Agent #" + i));
-        $('#agentConfig').append(typeSelect);
-        console.log(simConfig.agents[i].type);
-        typeSelect.val(simConfig.agents[i].type);
+    //deep clone array
+    modalAgentArr = JSON.parse(JSON.stringify(simConfig.agents));
+
+    initAgentConfigInModal();
+});
+
+$('#configModalAddAgent').click((e) => {
+    var numAgentsVal = parseInt($('#numAgents').text());
+    $('#numAgents').text(numAgentsVal + 1);
+
+    modalAgentArr.push({
+        type: "simple",
+        params: {}
+    });
+
+    if (numAgentsVal + 1 == 5) {
+        $('#configModalAddAgent').prop('disabled', true);
     }
+    initAgentConfigInModal();
 });
 
 $("#configModalSave").click((e) => {
@@ -64,8 +69,57 @@ $("#configModalSave").click((e) => {
     simConfig.space.columns = parseInt($('#numCols').val());
     simConfig.space.dirtProbability = parseFloat($('#dirtProb').val());
     simConfig.space.wallProbability = parseFloat($('#wallProb').val());
+    simConfig.agents = modalAgentArr;
     $("#configModal").modal("toggle");
 });
+
+function initAgentConfigInModal() {
+    $('#numAgents').text(modalAgentArr.length);
+    $('#agentConfig').html('');
+    for (var i = 0; i < modalAgentArr.length; i++) {
+        var typeSelect = createAgentSelect(i);
+        typeSelect.val(modalAgentArr[i].type);
+    }
+}
+
+function createAgentSelect(i) {
+    var formElemId = 'agentType_' + i;
+    var labelElemId = 'agentType_label_' + i;
+    var buttonElemId = 'agentType_btn_' + i;
+    var typeSelect = $('<select>').attr('id', formElemId)
+        .attr('class', 'form-control')
+        .attr('agent_id', i);
+    for (var type in agentTypes) {
+        typeSelect.append(new Option(agentTypes[type], type));
+    }
+    $('#agentConfig').append($('<label>')
+        .attr('for', formElemId)
+        .attr('id', labelElemId)
+        .text("Agent #" + i));
+    $('#agentConfig').append($('<button>')
+        .attr('class', 'btn btn-danger btn-sm ml-2')
+        .attr('id', buttonElemId)
+        .text("Del"));
+    $('#agentConfig').append(typeSelect);
+    
+    $('#' + buttonElemId).click((e) => {
+        removeRow(i);
+    });
+    $('#' + formElemId).change((e) => {
+        //console.log($('#' + formElemId).val());
+        var aid = parseInt($('#' + formElemId).attr('agent_id'));
+        modalAgentArr[aid].type = $('#' + formElemId).val();
+    });
+    return typeSelect;
+}
+
+function removeRow(i) {
+    var numAgentsVal = parseInt($('#numAgents').text());
+    modalAgentArr.splice(i, 1);
+    $('#numAgents').text(numAgentsVal - 1);
+    $('#configModalAddAgent').prop('disabled', false);
+    initAgentConfigInModal();
+}
 
 function abort_sim() {
     cmdsCount = 0;
