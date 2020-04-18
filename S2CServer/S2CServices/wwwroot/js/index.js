@@ -20,12 +20,12 @@ var simConfig = {
             type: "simple.boundandwall",
             params: {}
         },
-        {
-            type: "http",
-            params: {
-                "url": "http://127.0.0.1:5000/"
-            }
-        },
+        //{
+        //    type: "http",
+        //    params: {
+        //        "url": "http://127.0.0.1:5000/"
+        //    }
+        //},
     ]
 }
 
