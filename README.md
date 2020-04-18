@@ -31,6 +31,8 @@ An agent implements the following methods/endpoints.
 * **Next Command**: Provide the next command to be run in the currrent round.
 * **Command Result**: Accept the result of the command, when applied to the space.
 
+The simplest example of an agent implementation is https://github.com/abhishekmishra/s2c/blob/master/S2CServer/S2CCore/SimpleCleaningAgent.cs
+
 # Installation and Usage
 
 ## From code
@@ -41,5 +43,14 @@ $ cd s2c/S2CServer
 $ dotnet run -p ./S2CServices/S2CServices.csproj
 ```
 
+Now open browser at https://localhost:5003/
+
 ## From binaries
 TBD
+
+## Screenshot
+
+This is what the web UI looks like, the controls are self explanatory.
+
+![alt text](https://i.imgur.com/IgIPrcD.png "S2C Screenshot")
+
