@@ -14,7 +14,7 @@ class Direction(Enum):
 
 
 class Agent:
-    id = None
+    _id = None
     space_rows = 0
     space_cols = 0
     success = False
@@ -23,8 +23,8 @@ class Agent:
     row = 0
     col = 0
 
-    def __init__(self, id):
-        self.id = id
+    def __init__(self, i):
+        self._id = i
 
     def SetSpaceSize(self, r, c):
         self.space_rows = r
@@ -39,10 +39,10 @@ class Agent:
 
     def NextCommand(self, row, col, isDirty):
         if isDirty:
-            return ["clean", id, row, col]
+            return ["clean", self._id, row, col]
         else:
             r, c = self.NewLocation(row, col)
-            return ["moveto", id, r, c]
+            return ["moveto", self._id, r, c]
 
     def NewLocation(self, row, col):
         # move in a random direction
@@ -66,46 +66,47 @@ def home():
         return jsonify({'message': data})
 
 
-@app.route('/<int:id>/init', methods=['GET'])
-def init(id):
+@app.route('/<int:_id>/init', methods=['GET'])
+def init(_id):
     if(request.method == 'GET'):
-        print('agent #' + str(id) + ' initialized')
-        data = 'agent #' + str(id) + ' initialized'
-        agents[id] = Agent(id)
+        print('agent #' + str(_id) + ' initialized')
+        data = 'agent #' + str(_id) + ' initialized'
+        agents[_id] = Agent(_id)
         return jsonify({'message': data})
 
 
-@app.route('/<int:id>/spacesize', methods=['GET'])
-def init(id):
+@app.route('/<int:_id>/spacesize', methods=['GET'])
+def spaceSize(_id):
     if(request.method == 'GET'):
         r = request.args.get('rows')
         c = request.args.get('cols')
-        data = 'agent #' + str(id) + ' space received'
-        agents[id].SetSpaceSize(r, c)
+        data = 'agent #' + str(_id) + ' space received'
+        agents[_id].SetSpaceSize(r, c)
         return jsonify({'message': data})
 
 
-@app.route('/<int:id>/commandresult', methods=['GET'])
-def init(id):
+@app.route('/<int:_id>/commandresult', methods=['GET'])
+def commandResult(_id):
     if(request.method == 'GET'):
         s = False if int(request.args.get('success')) == 0 else True
         freason = request.args.get('failureReason')
         err = request.args.get('errorCode')
         r = request.args.get('row')
         c = request.args.get('col')
-        data = 'agent #' + str(id) + ' result received'
-        agents[id].CommandResult(s, freason, err, r, c)
+        data = 'agent #' + str(_id) + ' result received'
+        agents[_id].CommandResult(s, freason, err, int(r), int(c))
         return jsonify({'message': data})
 
 
-@app.route('/<int:id>/nextcommand', methods=['GET'])
-def init(id):
+@app.route('/<int:_id>/nextcommand', methods=['GET'])
+def nextCommand(_id):
     if(request.method == 'GET'):
-        isDirty = False if int(request.args.get('isDirty')) == 0 else True
+        isDirty = False if int(request.args.get('isdirty')) == 0 else True
         r = request.args.get('row')
         c = request.args.get('col')
-        data = 'agent #' + str(id) + ' result received'
-        cmd = agents[id].NextCommand(r, c, isDirty)
+        data = 'agent #' + str(_id) + ' result received'
+        cmd = agents[_id].NextCommand(int(r), int(c), isDirty)
+        print(cmd)
         return jsonify(cmd)
 
 # driver function
