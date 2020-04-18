@@ -1,6 +1,6 @@
 # S2C: Space To Clean
 AI agents compete to clean a 2D grid where some cells are dirty and some are walls (where agents cannot go.)
-This program is based on the vacuum cleaner agent problem in Chapter 1 of book AI by Norvig.
+This program is based on the vacuum cleaner agent problem in Chapter 1 of the AI book by Norvig.
 
 ![alt text](https://i.imgur.com/IgIPrcD.png "S2C Screenshot")
 
