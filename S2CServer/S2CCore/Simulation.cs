@@ -91,7 +91,7 @@ namespace S2CCore
             }
             else
             {
-                throw new SimulationException("Simulation is not stopped.", 
+                throw new SimulationException("Simulation is not stopped.",
                     SimulationErrorCode.SIM_ERR_SIM_RUNNING, null);
             }
         }
@@ -105,7 +105,7 @@ namespace S2CCore
             }
             else
             {
-                throw new SimulationException("Simulation is not stopped.", 
+                throw new SimulationException("Simulation is not stopped.",
                     SimulationErrorCode.SIM_ERR_SIM_RUNNING, null);
             }
         }
@@ -162,7 +162,7 @@ namespace S2CCore
                             cmd.Status = true;
                             cmd.FailureReason = null;
                             commands.Add(cmd);
-                            a.CommandResult(true, null, 
+                            a.CommandResult(true, null,
                                 SimulationErrorCode.SIM_ERR_SUCCESS, cmd.Location);
                         }
                         catch (SimulationException e)
@@ -177,7 +177,7 @@ namespace S2CCore
                             cmd.Status = false;
                             cmd.FailureReason = e.Message;
                             commands.Add(cmd);
-                            a.CommandResult(false, e.Message, 
+                            a.CommandResult(false, e.Message,
                                 SimulationErrorCode.SIM_ERR_UNKNOWN, cmd.Location);
                         }
                     }
@@ -234,34 +234,30 @@ namespace S2CCore
                 },
                 ""agents"": [
                     {
-                        ""type"": ""http"",
-                        ""params"": {
-                            ""url"": ""http://127.0.0.1:5000/""
-                        }
+                        ""type"": ""simple"",
+                        ""params"": {}
+                    },
+                    {
+                        ""type"": ""simple.bound"",
+                        ""params"": {}
+                    },
+                    {
+                        ""type"": ""simple.boundandwall"",
+                        ""params"": {}
+                    },
+                    {
+                        ""type"": ""graph.visitonce"",
+                        ""params"": {}
                     },
                 ]
             }
         ";
 
-                    //        {
-                    //    ""type"": ""simple"",
-                    //    ""params"": {}
-                    //},
-                    //{
-                    //    ""type"": ""simple.bound"",
-                    //    ""params"": {}
-                    //},
-                    //{
-                    //    ""type"": ""simple.bound"",
-                    //    ""params"": {}
-                    //},
-
-        //{
-        //    ""type"": ""simple-bound-check"",
-        //    ""params"": {
-        //        ""blah"": ""bluh""
-        //    }
-        //}
+                        //{
+                        //""type"": ""http"",
+                        //""params"": {
+                        //    ""url"": ""http://127.0.0.1:5000/""
+                        //}
     }
 
     public class SimConfig

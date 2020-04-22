@@ -12,16 +12,17 @@ namespace S2CCore
         protected Coords Location;
         protected Direction direction = Direction.E;
         protected Random rnd = new Random();
-        Dictionary<string, string> args;
 
         public SimpleAgentBase(Dictionary<string, string> args)
         {
-            this.args = args;
+            this.Args = args;
         }
 
         public int AgentId { get; set; }
 
         public Coords SpaceSize { get; set; }
+
+        protected Dictionary<string, string> Args { get; set; }
 
         public virtual void CommandResult(bool success, string failureReason, 
             SimulationErrorCode errCode, Coords loc)

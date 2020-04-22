@@ -14,5 +14,17 @@ namespace S2CCore
             Row = row;
             Column = col;
         }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Coords coords &&
+                   Row == coords.Row &&
+                   Column == coords.Column;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Row, Column);
+        }
     }
 }
