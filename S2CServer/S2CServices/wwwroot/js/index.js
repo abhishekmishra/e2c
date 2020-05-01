@@ -5,7 +5,7 @@ var simConfig = {
         rows: 20,
         columns: 20,
         dirtProbability: 0.3,
-        wallProbability: 0.1
+        wallProbability: 0.0
     },
     agents: [
         {
@@ -20,7 +20,10 @@ var simConfig = {
             type: "simple.boundandwall",
             params: {}
         },
-        //{
+        {
+            type: "spiral",
+            params: {}
+        },        //{
         //    type: "http",
         //    params: {
         //        "url": "http://127.0.0.1:5000/"

@@ -246,7 +246,7 @@ namespace S2CCore
                         ""params"": {}
                     },
                     {
-                        ""type"": ""graph.visitonce"",
+                        ""type"": ""spiral"",
                         ""params"": {}
                     },
                 ]

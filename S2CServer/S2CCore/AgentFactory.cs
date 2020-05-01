@@ -15,6 +15,7 @@ namespace S2CCore
                 { "simple.bound", _CurrentAssembly.GetType("S2CCore.SimpleBoundCheckAgent") },
                 { "simple.boundandwall", _CurrentAssembly.GetType("S2CCore.BoundAndWallCheckAgent") },
                 { "graph.visitonce", _CurrentAssembly.GetType("S2CCore.GraphBasedVisitOnceAgent") },
+                { "spiral", _CurrentAssembly.GetType("S2CCore.SpiralAgent") },
                 { "http", _CurrentAssembly.GetType("S2CCore.HttpAgent") },
             };
 
